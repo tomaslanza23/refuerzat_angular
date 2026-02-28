@@ -1,0 +1,92 @@
+<div class="descargas-container">
+  <div class="descargas-header">
+    <h2>
+      <i class="fas fa-file-excel"></i>
+      Exportar Inscriptos a Excel
+    </h2>
+    <p>Descargá los datos de inscriptos en formato Excel</p>
+  </div>
+
+  <div class="descargas-grid">
+
+    <!-- Botón 1: Descargar TODOS -->
+    <div class="descarga-card">
+      <div class="card-icon todos">
+        <i class="fas fa-users"></i>
+      </div>
+      <h3>Todos los Inscriptos</h3>
+      <p>Descargá la lista completa de todos los inscriptos del sistema</p>
+      <button class="btn-descarga todos" (click)="descargarTodos()">
+        <i class="fas fa-download"></i>
+        Descargar Todos
+      </button>
+    </div>
+
+    <!-- Botón 2: Descargar por PROGRAMA -->
+    <div class="descarga-card">
+      <div class="card-icon programa">
+        <i class="fas fa-graduation-cap"></i>
+      </div>
+      <h3>Por Programa</h3>
+      <p>Filtrá inscriptos por programa específico</p>
+
+      <select
+        class="select-filtro"
+        [(ngModel)]="programaSeleccionado"
+        [disabled]="programas().length === 0"
+      >
+        <option [value]="undefined">Seleccioná un programa</option>
+        <option *ngFor="let programa of programas()" [value]="programa.idPrograma">
+          {{ programa.nombre }}
+        </option>
+      </select>
+
+      <button
+        class="btn-descarga programa"
+        (click)="descargarPorPrograma()"
+        [disabled]="!programaSeleccionado"
+      >
+        <i class="fas fa-download"></i>
+        Descargar Programa
+      </button>
+    </div>
+
+    <!-- Botón 3: Descargar por COMISIÓN -->
+    <div class="descarga-card">
+      <div class="card-icon comision">
+        <i class="fas fa-user-friends"></i>
+      </div>
+      <h3>Por Comisión</h3>
+      <p>Filtrá inscriptos por comisión específica</p>
+
+      <select
+        class="select-filtro"
+        [(ngModel)]="comisionSeleccionada"
+        [disabled]="comisiones().length === 0"
+      >
+        <option [value]="undefined">Seleccioná una comisión</option>
+        <option *ngFor="let comision of comisiones()" [value]="comision.idComision">
+          {{ comision.codigoComision }} - {{ comision.programaNombre }}
+        </option>
+      </select>
+
+      <button
+        class="btn-descarga comision"
+        (click)="descargarPorComision()"
+        [disabled]="!comisionSeleccionada"
+      >
+        <i class="fas fa-download"></i>
+        Descargar Comisión
+      </button>
+    </div>
+
+  </div>
+
+  <div class="info-box">
+    <i class="fas fa-info-circle"></i>
+    <div>
+      <strong>Información:</strong>
+      <p>Los archivos Excel incluyen: datos personales, programa, comisión, días, horario y fecha de inscripción.</p>
+    </div>
+  </div>
+</div>

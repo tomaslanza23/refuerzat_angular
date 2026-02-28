@@ -1,0 +1,172 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="fas fa-users"></i>
+        {{ esEdicion ? 'Editar Comisión' : 'Nueva Comisión' }}
+      </h1>
+      <p class="page-subtitle">
+        {{ esEdicion ? 'Modificá los datos de la comisión' : 'Creá una nueva comisión para un programa' }}
+      </p>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <form [formGroup]="form" (ngSubmit)="guardar()">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-barcode"></i>
+            Código de Comisión <span class="required">*</span>
+          </label>
+          <input
+            type="text"
+            class="form-input"
+            formControlName="codigoComision"
+            placeholder="Ej: COM-MKT-001"
+          />
+          <div class="form-error" *ngIf="form.get('codigoComision')?.touched && form.get('codigoComision')?.invalid">
+            El código es obligatorio
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="!esEdicion">
+          <label class="form-label">
+            <i class="fas fa-graduation-cap"></i>
+            Programa <span class="required">*</span>
+          </label>
+          <select class="form-input" formControlName="programaId">
+            <option value="">Seleccioná un programa</option>
+            <option *ngFor="let programa of programas" [value]="programa.idPrograma">
+              {{ programa.nombre }}
+            </option>
+          </select>
+          <div class="form-error" *ngIf="form.get('programaId')?.touched && form.get('programaId')?.invalid">
+            El programa es obligatorio
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-calendar-alt"></i>
+            Días <span class="required">*</span>
+          </label>
+          <input
+            type="text"
+            class="form-input"
+            formControlName="dias"
+            placeholder="Ej: Lunes y Miércoles"
+          />
+          <div class="form-error" *ngIf="form.get('dias')?.touched && form.get('dias')?.invalid">
+            Los días son obligatorios
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-clock"></i>
+            Horario <span class="required">*</span>
+          </label>
+          <input
+            type="text"
+            class="form-input"
+            formControlName="horario"
+            placeholder="Ej: 18:00 a 20:00"
+          />
+          <div class="form-error" *ngIf="form.get('horario')?.touched && form.get('horario')?.invalid">
+            El horario es obligatorio
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          <i class="fas fa-map-marker-alt"></i>
+          Lugar <span class="required">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-input"
+          formControlName="lugar"
+          placeholder="Ej: Sede Central - Aula 301"
+        />
+        <div class="form-error" *ngIf="form.get('lugar')?.touched && form.get('lugar')?.invalid">
+          El lugar es obligatorio
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-tag"></i>
+            Turno <span class="required">*</span>
+          </label>
+          <input
+            type="text"
+            class="form-input"
+            formControlName="turno"
+            placeholder="Ej: Mañana / Tarde / Noche"
+          />
+          <div class="form-error" *ngIf="form.get('turno')?.touched && form.get('turno')?.invalid">
+            El turno es obligatorio
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-users"></i>
+            Cupo Total <span class="required">*</span>
+          </label>
+          <input
+            type="number"
+            class="form-input"
+            formControlName="cupoTotal"
+            min="1"
+            placeholder="Ej: 30"
+          />
+          <div class="form-hint" *ngIf="esEdicion">
+            <i class="fas fa-info-circle"></i>
+            Cupos ocupados: {{ cuposOcupadosOriginales }} | Disponibles: {{ getCuposDisponibles() }}
+          </div>
+          <div class="form-error" *ngIf="form.get('cupoTotal')?.touched && form.get('cupoTotal')?.invalid">
+            El cupo total debe ser al menos 1
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="esEdicion">
+        <label class="status-toggle">
+          <input type="checkbox" formControlName="activa" />
+          <span class="toggle-ui"></span>
+          <span class="toggle-label">
+            <i class="fas" [class.fa-check-circle]="form.get('activa')?.value" [class.fa-times-circle]="!form.get('activa')?.value"></i>
+            {{ form.get('activa')?.value ? 'Comisión activa' : 'Comisión inactiva' }}
+          </span>
+        </label>
+        <small class="form-hint">
+          <i class="fas fa-info-circle"></i>
+          Las comisiones inactivas no aparecen en el formulario público de inscripción
+        </small>
+      </div>
+
+      <div class="form-error-global" *ngIf="error">
+        <i class="fas fa-exclamation-triangle"></i>
+        {{ error }}
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="cancelar()">
+          <i class="fas fa-times"></i>
+          Cancelar
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="cargando">
+          <i class="fas" [class.fa-save]="!cargando" [class.fa-spinner]="cargando" [class.fa-spin]="cargando"></i>
+          {{ esEdicion ? 'Guardar cambios' : 'Crear comisión' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

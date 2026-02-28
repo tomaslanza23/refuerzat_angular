@@ -1,0 +1,212 @@
+<div class="admin-container">
+  <!-- Header Section -->
+  <div class="admin-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <span class="title-icon"></span>
+        Administración de Programas
+      </h1>
+      <p class="page-subtitle">Gestiona los programas de formación del sistema</p>
+    </div>
+
+    <button class="btn-primary btn-nuevo" (click)="irANuevo()">
+      <span class="btn-icon">➕</span>
+      Nuevo Programa
+    </button>
+  </div>
+
+  <!-- Search and Filter Bar -->
+  <div class="filter-section" *ngIf="!cargando">
+    <div class="search-box">
+      <span class="search-icon">
+      </span>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Buscar por nombre o descripción..."
+        [(ngModel)]="searchTerm"
+        (input)="filtrarProgramas()"
+      />
+      <button
+        class="clear-search"
+        *ngIf="searchTerm"
+        (click)="limpiarBusqueda()"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div class="filter-buttons">
+      <button
+        class="filter-btn"
+        [class.active]="filtroEstado === 'todos'"
+        (click)="cambiarFiltro('todos')"
+      >
+        Todos ({{ programas.length }})
+      </button>
+      <button
+        class="filter-btn filter-activos"
+        [class.active]="filtroEstado === 'activos'"
+        (click)="cambiarFiltro('activos')"
+      >
+        Activos ({{ contarActivos() }})
+      </button>
+      <button
+        class="filter-btn filter-inactivos"
+        [class.active]="filtroEstado === 'inactivos'"
+        (click)="cambiarFiltro('inactivos')"
+      >
+        Inactivos ({{ contarInactivos() }})
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="cargando">
+    <div class="spinner"></div>
+    <p class="loading-text">Cargando programas...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-container" *ngIf="error && !cargando">
+    <div class="error-icon"></div>
+    <h3 class="error-title">Error al cargar programas</h3>
+    <p class="error-message">{{ error }}</p>
+    <button class="btn-secondary" (click)="cargarProgramas()">
+      🔄 Reintentar
+    </button>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-container" *ngIf="!cargando && programasFiltrados.length === 0 && !error">
+    <div class="empty-icon"></div>
+    <h3 class="empty-title">
+      {{ searchTerm || filtroEstado !== 'todos' ? 'No se encontraron programas' : 'No hay programas cargados' }}
+    </h3>
+    <p class="empty-message">
+      {{ searchTerm || filtroEstado !== 'todos'
+         ? 'Intenta ajustar los filtros de búsqueda'
+         : 'Comienza creando tu primer programa de formación' }}
+    </p>
+    <button class="btn-primary" (click)="irANuevo()" *ngIf="programas.length === 0">
+      ➕ Crear Primer Programa
+    </button>
+  </div>
+
+  <!-- Programs Grid -->
+  <div class="programs-grid" *ngIf="!cargando && programasFiltrados.length > 0">
+    <div
+      class="program-card"
+      *ngFor="let programa of programasFiltrados"
+      [class.inactive]="!programa.activo"
+    >
+      <!-- Card Header -->
+      <div class="card-header">
+        <div class="card-title-section">
+          <h3 class="program-name">{{ programa.nombre }}</h3>
+          <span
+            class="status-badge"
+            [class.status-active]="programa.activo"
+            [class.status-inactive]="!programa.activo"
+          >
+            <span class="status-dot"></span>
+            {{ programa.activo ? 'Activo' : 'Inactivo' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Card Body -->
+      <div class="card-body">
+        <p class="program-description">
+          {{ programa.descripcion || 'Sin descripción disponible' }}
+        </p>
+
+        <!-- Stats Section -->
+        <div class="program-stats">
+          <div class="stat-item">
+            <span class="stat-icon"></span>
+            <span class="stat-label">ID:</span>
+            <span class="stat-value">{{ programa.idPrograma }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Actions -->
+      <div class="card-actions">
+        <button
+          class="btn-action btn-edit"
+          (click)="editar(programa)"
+          title="Editar programa"
+        >
+          <span class="action-icon"></span>
+          Editar
+        </button>
+
+        <button
+          class="btn-action"
+          [class.btn-deactivate]="programa.activo"
+          [class.btn-activate]="!programa.activo"
+          (click)="confirmarCambioEstado(programa)"
+          [title]="programa.activo ? 'Desactivar programa' : 'Activar programa'"
+        >
+          <span class="action-icon">{{ programa.activo ? '' : '' }}</span>
+          {{ programa.activo ? 'Desactivar' : 'Activar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Counter -->
+  <div class="results-footer" *ngIf="!cargando && programasFiltrados.length > 0">
+    <p class="results-text">
+      Mostrando <strong>{{ programasFiltrados.length }}</strong>
+      {{ programasFiltrados.length === 1 ? 'programa' : 'programas' }}
+      {{ searchTerm ? 'que coinciden con tu búsqueda' : '' }}
+    </p>
+  </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div class="modal-overlay" *ngIf="programaParaCambiar" (click)="cancelarCambioEstado()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3 class="modal-title">
+        {{ programaParaCambiar.activo ? ' Desactivar Programa' : ' Activar Programa' }}
+      </h3>
+      <button class="modal-close" (click)="cancelarCambioEstado()">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <p class="modal-message">
+        ¿Estás seguro que deseas
+        <strong>{{ programaParaCambiar.activo ? 'desactivar' : 'activar' }}</strong>
+        el programa <strong>"{{ programaParaCambiar.nombre }}"</strong>?
+      </p>
+
+      <div class="modal-info" *ngIf="programaParaCambiar.activo">
+        <span class="info-icon"></span>
+        <p class="info-text">
+          No podrás desactivar este programa si tiene comisiones activas asociadas.
+        </p>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-modal btn-cancel" (click)="cancelarCambioEstado()">
+        Cancelar
+      </button>
+      <button
+        class="btn-modal btn-confirm"
+        [class.btn-confirm-danger]="programaParaCambiar.activo"
+        [class.btn-confirm-success]="!programaParaCambiar.activo"
+        (click)="ejecutarCambioEstado()"
+        [disabled]="procesandoCambio"
+      >
+        <span *ngIf="!procesandoCambio">
+          {{ programaParaCambiar.activo ? 'Desactivar' : 'Activar' }}
+        </span>
+        <span *ngIf="procesandoCambio" class="processing">Procesando...</span>
+      </button>
+    </div>
+  </div>
+</div>

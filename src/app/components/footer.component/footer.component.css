@@ -1,0 +1,408 @@
+html{
+    width: 100%;
+    overflow-x: hidden;
+    position: relative;
+}
+
+@media(max-width:990px) {
+    .footer-web{
+        display: none;
+    }
+    * {
+        margin: 0;
+        padding: 0;
+        text-decoration: none;
+    }
+
+    .footer-mobile {
+
+        background: linear-gradient(
+            347deg,
+            #8ee2d6ff 10%,
+            #153244 90%);
+        min-width: 100%;
+        min-height: max-content;
+        height: fit-content;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        overflow-y: hidden;
+
+
+    }
+    .footer-mobile hr {
+
+        width: 90%;
+        margin-bottom: 1em;
+        margin-top: 1em;
+        color: white;
+        background-color: white;
+
+    }
+
+    .footer-img-vamosba {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        overflow: hidden;
+
+    }
+
+    .footer-img-vamosba img {
+        display: flex;
+        width: 170px;
+    }
+
+    .footer-telefonos-utiles {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        overflow: hidden;
+        width: 100%;
+
+    }
+
+    .footer-telefonos-utiles p {
+        color: white;
+        font-size: 24px;
+        font-weight: 300;
+
+    }
+
+    .footer-telefonos-utiles-numeros {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+
+        margin-top: 1em;
+        margin-bottom: 1em;
+        overflow: hidden;
+        flex-wrap: wrap;
+
+    }
+
+    .footer-tel-item-num {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        overflow: hidden;
+        width: 100px;
+        flex-wrap: wrap;
+
+    }
+
+    .footer-tel-item-num p {
+        display: flex;
+        width: 95%;
+        justify-content: center;
+        flex-wrap: wrap;
+        font-size: 0.8rem;
+        color:white;
+    }
+
+    .footer-tel-item-num a {
+        animation: pointer;
+    }
+    .footer-tel-item-num a span {
+        display: flex;
+        width: 95%;
+        justify-content: center;
+        color: white !important;
+        font-size: 2em;
+        font-weight: bold;
+
+    }
+    .footer-tel-item-num a span:hover {
+        transform: scale(1.1);
+
+    }
+    .footer-ver-todos-tel {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        overflow: hidden;
+        text-align: center;
+
+    }
+
+    .footer-ver-todos-tel a span {
+        color: white !important;
+        font-size: 24px;
+        font-weight:  300;
+        border-bottom: 1px solid white;
+
+    }
+    .footer-redes{
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        overflow: hidden;
+        width: 100%;
+        text-align: center;
+    }
+    .footer-redes p{
+        color: white !important;
+        font-size: 24px;
+        font-weight:  300;
+    }
+    .redes-iconos{
+        width: 100%;
+        color: white !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        margin-top: 2em;
+        margin-bottom: 1em;
+        overflow: hidden;
+
+
+    }
+
+    .redes-iconos a {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .redes-iconos a img{
+        width:40px;
+    }
+    .footer-legales{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        text-align: center;
+    }
+    .footer-legales img{
+        width: 250px;
+        margin-bottom: 2em;
+    }
+    .footer-legales p{
+        width: 90%;
+        color: white;
+        margin-bottom: 1em;
+    }
+    .footer-legales-items{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 1em;
+        margin-bottom: 1em;
+
+    }
+    .footer-legales-items a {
+        color: white !important;
+        width: 100px;
+        overflow: hidden;
+        margin: auto;
+        margin-bottom: 1em;
+
+
+    }
+    .footer-legales-items a span{
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        color: white !important;
+        text-align: center;
+    }
+
+}
+
+
+@media(min-width:991px){
+    .footer-mobile{
+        display: none;
+
+    }
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    footer {
+        background: linear-gradient(147deg, #8ee2d6ff, #153244);
+        display: flex;
+        overflow: hidden;
+        justify-content: center;
+
+
+    }
+
+    .contenedor-fot-prin {
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+
+        padding: 2em;
+    }
+
+    .fot-sup {
+        display: flex;
+        flex-direction: row;
+        border-bottom: 1px solid white;
+        width: 100%;
+        justify-content: space-between;
+        padding-bottom: 1.5em;
+
+    }
+
+    .logo-ba-fot {
+        display: flex;
+        width: 20%;
+    }
+
+    .logo-ba-fot img{
+        width: 100%;
+    }
+
+    .fot-sup-cont {
+        display: flex;
+        flex-direction: column;
+        width: calc(100% - 25%);
+        justify-content: space-between;
+        gap: 25px;
+
+
+    }
+
+    .fot-cont-titulos {
+        display: flex;
+        flex-direction: column;
+        width: 30%;
+        gap: 10px;
+    }
+    .fot-cont-titulos a{
+
+        text-decoration: none;
+    }
+    .fot-cont-titulos a p{
+
+        color: white !important;
+    }
+
+    .fot-cont-tel {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        color: white;
+    }
+
+    .fot-cont-tel div {
+        width: calc(100% / 7.5);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        color: white;
+    }
+    .fot-cont-tel div a{
+        text-decoration: none;
+    }
+    .fot-cont-tel div a span {
+        font-size:large;
+        font-weight: bold;
+        color: white !important;
+        border-bottom: 1px solid white;
+    }
+
+
+    .fot-cont-sup-titulos {
+        display: flex;
+        color: white;
+    }
+
+    .fot-cont-inf {
+        width: 100%;
+        display: flex;
+    }
+
+    .fot-cont-inf-titulos-redes {
+        display: flex;
+        flex-direction: column;
+        width: 23%;
+        gap: 10px;
+        color: white;
+    }
+
+    .fot-cont-inf-redes {
+        display: flex;
+        width: 40%;
+        justify-content: space-between;
+    }
+
+    .fot-cont-inf-redes a:hover {
+        transform: scale(1.4) rotateY(360grad) !important;
+
+        transition: 0.5s all;
+    }
+
+    .fot-inf {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 1em;
+    }
+
+    .fot-inf a {
+        text-decoration: none;
+    }
+
+    .fot-inf a span {
+        color: white;
+    }
+
+    .fot-inf-div-logo {
+        width: 42%;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .fot-inf-div-logo p{
+        color: white;
+    }
+
+    .fot-inf-div-contenido-iz {
+        display: flex;
+        width: calc(100% - 50%);
+        justify-content: space-between;
+    }
+
+    .fot-inf-div-logo p {
+        display: flex;
+        width: 80%;
+        font-size: smaller;
+    }
+
+    .logofo {
+        width: 45%;
+    }
+    #logo-salir{
+        color: white;
+        font-size: 40px;
+
+    }
+}

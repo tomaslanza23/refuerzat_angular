@@ -11,6 +11,12 @@
 npm-debug.log
 yarn-error.log
 
+/node_modules/
+dist/
+.angular/
+.vscode/
+.DS_Store
+
 # IDEs and editors
 .idea/
 .project

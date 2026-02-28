@@ -1,0 +1,115 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <div class="header-content">
+      <h1><i class="fas fa-user-edit"></i> Editar Inscripto</h1>
+      <p>Modificá los datos del inscripto</p>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <form [formGroup]="form" (ngSubmit)="guardar()">
+
+      <h3><i class="fas fa-user"></i> Datos Personales</h3>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nombre <span class="required">*</span></label>
+          <input type="text" class="form-input" formControlName="nombre" />
+          <div class="form-error" *ngIf="form.get('nombre')?.touched && form.get('nombre')?.invalid">
+            El nombre es obligatorio
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Apellido <span class="required">*</span></label>
+          <input type="text" class="form-input" formControlName="apellido" />
+          <div class="form-error" *ngIf="form.get('apellido')?.touched && form.get('apellido')?.invalid">
+            El apellido es obligatorio
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Email <span class="required">*</span></label>
+          <input type="email" class="form-input" formControlName="correoElectronico" />
+          <div class="form-error" *ngIf="form.get('correoElectronico')?.touched && form.get('correoElectronico')?.invalid">
+            Ingresá un email válido
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Teléfono</label>
+          <input type="text" class="form-input" formControlName="telefonoCelular" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Dirección</label>
+        <input type="text" class="form-input" formControlName="direccion" />
+      </div>
+
+      <h3><i class="fas fa-briefcase"></i> Datos del Emprendimiento</h3>
+
+      <div class="form-group">
+        <label class="form-label">Nombre del Emprendimiento</label>
+        <input type="text" class="form-input" formControlName="nombreEmprendimiento" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Sector <span class="required">*</span></label>
+          <select class="form-input" formControlName="sectorEmprendimiento">
+            <option value="">Seleccioná un sector</option>
+            <option *ngFor="let sector of sectores" [value]="sector.value">{{ sector.label }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Comuna <span class="required">*</span></label>
+          <select class="form-input" formControlName="comuna">
+            <option value="">Seleccioná una comuna</option>
+            <option *ngFor="let comuna of comunas" [value]="comuna.value">{{ comuna.label }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Etapa <span class="required">*</span></label>
+        <select class="form-input" formControlName="etapaEmprendimiento">
+          <option value="">Seleccioná una etapa</option>
+          <option *ngFor="let etapa of etapas" [value]="etapa.value">{{ etapa.label }}</option>
+        </select>
+      </div>
+
+      <h3><i class="fas fa-users"></i> Comisión</h3>
+
+      <div class="form-group">
+        <label class="form-label">Comisión <span class="required">*</span></label>
+        <select class="form-input" formControlName="comisionId">
+          <option value="">Seleccioná una comisión</option>
+          <option *ngFor="let comision of comisionesDelPrograma" [value]="comision.idComision">
+            {{ comision.codigoComision }} - {{ comision.dias }} - {{ comision.horario }}
+          </option>
+        </select>
+        <small class="form-hint">
+          <i class="fas fa-info-circle"></i>
+          Programa: {{ inscriptoOriginal?.programaNombre }}
+        </small>
+      </div>
+
+      <div class="form-error-global" *ngIf="error">
+        <i class="fas fa-exclamation-triangle"></i> {{ error }}
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="cancelar()">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="cargando">
+          <i class="fas fa-save"></i> Guardar Cambios
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

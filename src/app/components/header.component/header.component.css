@@ -1,0 +1,791 @@
+.headerInicio {
+  padding: 15px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  background-color: #153244;
+  color: #ffffff;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+}
+
+.logoContainer {
+  flex-shrink: 0;
+}
+
+.logoTalentotech {
+  width: 90px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.logoTalentotech:hover {
+  transform: scale(1.05);
+}
+
+.logoBuenosAires {
+  width: 180px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.header-text {
+  text-align: center;
+}
+
+.main-title {
+  margin: 0;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.btn-fourth {
+  cursor: pointer;
+  text-transform: uppercase;
+  background: #8de2d6;
+  color: #000000;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 0.85em;
+  font-weight: 700;
+  display: inline-block;
+  border: none;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.btn-fourth:hover {
+  background: #ffffff;
+  color: #153244;
+  transform: translateY(-2px);
+}
+
+a.btn-fourth {
+  text-decoration: none !important;
+}
+
+.redirecciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+  justify-content: center;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.redireccion {
+  cursor: pointer;
+  padding: 8px 14px;
+  transition: all 0.2s ease;
+  background-color: #8de2d6;
+  border-radius: 5px;
+  color: #000000;
+  font-size: 0.8em;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+}
+
+.redireccion:hover {
+  background-color: #ffffff;
+  border-radius: 10px;
+  color: #153244;
+  transform: translateY(-2px);
+}
+
+.vector {
+  width: 24px;
+  height: auto;
+}
+
+.mobile-vector {
+  width: 20px !important;
+}
+
+.logo1,
+.logo2,
+.logo3 {
+  padding: 12px 16px;
+  margin: 5px;
+  font-size: 0.9em;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  background: #8de2d6;
+  color: #000000;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.logo1:hover,
+.logo2:hover,
+.logo3:hover {
+  background: #ffffff;
+  color: #153244;
+  transform: translateY(-2px);
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #1a3a4a 0%, #2c5f7a 100%);
+  color: #ffffff;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 20px;
+  background-color: #153244;
+}
+
+.logo-container {
+  flex-shrink: 0;
+}
+
+.hero-logo {
+  height: 40px;
+  width: auto;
+}
+
+.hero-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+}
+
+.nav-btn {
+  background-color: transparent;
+  border: 2px solid #5eead4;
+  color: #5eead4;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+  background-color: #5eead4;
+  color: #1a3a4a;
+  transform: translateY(-2px);
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding: 40px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero-title-wrapper {
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.hero-brand {
+  font-size: clamp(32px, 10vw, 90px);
+  font-weight: 300;
+  line-height: 1.1;
+  margin: 0;
+  color: #ffffff;
+  text-align: center;
+}
+
+@media screen and (max-width: 480px) {
+  .headerInicio {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .logoTalentotech {
+    width: 80px;
+  }
+
+  .logoBuenosAires {
+    width: 150px;
+  }
+
+  .redirecciones {
+    gap: 8px;
+    padding: 0 5px;
+  }
+
+  .redireccion {
+    padding: 6px 10px;
+    font-size: 0.75em;
+    flex: 1 1 calc(50% - 8px);
+    min-width: 100px;
+  }
+
+  .btn-fourth {
+    padding: 8px 12px;
+    font-size: 0.8em;
+    width: 100%;
+  }
+
+  .logo1,
+  .logo2,
+  .logo3 {
+    padding: 10px 12px;
+    font-size: 0.8em;
+    margin: 3px;
+    flex: 1 1 100%;
+  }
+
+  .vector {
+    width: 20px;
+  }
+
+  .mobile-vector {
+    width: 16px !important;
+  }
+
+  .hero-header {
+    padding: 12px 15px;
+    gap: 12px;
+  }
+
+  .hero-logo {
+    height: 35px;
+  }
+
+  .hero-nav {
+    gap: 8px;
+  }
+
+  .nav-btn {
+    padding: 6px 12px;
+    font-size: 11px;
+    flex: 1 1 calc(50% - 8px);
+  }
+
+  .hero-content {
+    padding: 30px 15px;
+    gap: 25px;
+  }
+
+  .hero-brand {
+    font-size: clamp(28px, 9vw, 40px);
+  }
+}
+
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  .headerInicio {
+    padding: 18px 25px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logoTalentotech {
+    width: 100px;
+  }
+
+  .logoBuenosAires {
+    width: 200px;
+  }
+
+  .redirecciones {
+    gap: 10px;
+    justify-content: flex-end;
+    width: auto;
+    flex: 1;
+    margin-left: 20px;
+  }
+
+  .redireccion {
+    padding: 8px 14px;
+    font-size: 0.8em;
+  }
+
+  .logo1,
+  .logo2,
+  .logo3 {
+    padding: 12px 16px;
+    font-size: 0.85em;
+    flex: 1 1 calc(50% - 10px);
+  }
+
+  .vector {
+    width: 22px;
+  }
+
+  .hero-header {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 15px 25px;
+  }
+
+  .hero-logo {
+    height: 42px;
+  }
+
+  .hero-nav {
+    width: auto;
+    justify-content: flex-end;
+  }
+
+  .nav-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .hero-content {
+    flex-direction: row;
+    text-align: left;
+    padding: 45px 25px;
+    gap: 35px;
+  }
+
+  .hero-title-wrapper {
+    width: auto;
+  }
+
+  .hero-brand {
+    font-size: clamp(36px, 7vw, 55px);
+    text-align: left;
+  }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .headerInicio {
+    padding: 25px 40px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logoTalentotech {
+    width: 115px;
+    margin: 0 15px 0 0;
+  }
+
+  .logoBuenosAires {
+    width: 250px;
+  }
+
+  .redirecciones {
+    gap: 14px;
+    justify-content: flex-end;
+    margin-bottom: 0;
+  }
+
+  .redireccion {
+    padding: 10px 18px;
+    font-size: 0.9em;
+  }
+
+  .btn-fourth {
+    padding: 12px 22px;
+    font-size: 0.95em;
+  }
+
+  .logo1,
+  .logo2,
+  .logo3 {
+    padding: 16px 22px;
+    font-size: 1em;
+    margin: 8px;
+  }
+
+  .vector {
+    width: 1.3vw;
+    min-width: 20px;
+  }
+
+  .hero-header {
+    padding: 20px 40px;
+  }
+
+  .hero-logo {
+    height: 48px;
+  }
+
+  .hero-nav {
+    gap: 12px;
+  }
+
+  .nav-btn {
+    padding: 10px 22px;
+    font-size: 15px;
+  }
+
+  .hero-content {
+    flex-direction: row;
+    padding: 60px 40px;
+    gap: 60px;
+  }
+
+  .hero-brand {
+    font-size: clamp(50px, 6vw, 70px);
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  .headerInicio {
+    padding: 30px 60px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logoTalentotech {
+    width: 125px;
+    margin: 0 15px;
+  }
+
+  .logoBuenosAires {
+    width: 300px;
+  }
+
+  .redirecciones {
+    gap: 18px;
+    justify-content: flex-end;
+    margin-bottom: 0;
+  }
+
+  .redireccion {
+    padding: 10px 20px;
+    font-size: 0.95em;
+  }
+
+  .btn-fourth {
+    padding: 12px 25px;
+    font-size: 1em;
+  }
+
+  .logo1,
+  .logo2,
+  .logo3 {
+    padding: 18px 25px;
+    font-size: 1.1em;
+    margin: 10px;
+  }
+
+  .vector {
+    width: 1.5vw;
+    min-width: 22px;
+  }
+
+  .hero-header {
+    padding: 20px 60px;
+  }
+
+  .hero-logo {
+    height: 50px;
+  }
+
+  .hero-nav {
+    gap: 15px;
+  }
+
+  .nav-btn {
+    padding: 10px 25px;
+    font-size: 16px;
+  }
+
+  .hero-content {
+    padding: 60px;
+    gap: 80px;
+  }
+
+  .hero-brand {
+    font-size: clamp(60px, 5vw, 90px);
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .headerInicio {
+    padding: 35px 80px;
+  }
+
+  .logoTalentotech {
+    width: 140px;
+  }
+
+  .logoBuenosAires {
+    width: 350px;
+  }
+
+  .redirecciones {
+    gap: 22px;
+  }
+
+  .redireccion {
+    padding: 12px 24px;
+    font-size: 1em;
+  }
+
+  .btn-fourth {
+    padding: 14px 30px;
+    font-size: 1.05em;
+  }
+
+  .logo1,
+  .logo2,
+  .logo3 {
+    padding: 22px 30px;
+    font-size: 1.2em;
+    margin: 12px;
+  }
+
+  .hero-header {
+    padding: 25px 80px;
+  }
+
+  .hero-logo {
+    height: 55px;
+  }
+
+  .hero-nav {
+    gap: 18px;
+  }
+
+  .nav-btn {
+    padding: 12px 30px;
+    font-size: 17px;
+  }
+
+  .hero-content {
+    padding: 80px;
+    gap: 100px;
+  }
+
+  .hero-brand {
+    font-size: 90px;
+  }
+}
+
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .headerInicio {
+    padding: 10px 20px;
+    flex-direction: row;
+    gap: 15px;
+  }
+
+  .hero-header {
+    padding: 10px 20px;
+    flex-direction: row;
+  }
+
+  .hero-content {
+    padding: 20px;
+    gap: 30px;
+  }
+
+  .hero-brand {
+    font-size: clamp(24px, 5vh, 40px);
+  }
+}
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    rgba(21, 50, 68, 0.75),
+    rgba(21, 50, 68, 0.85)
+  );
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.35s ease;
+}
+
+.modal-contacto {
+  background: linear-gradient(180deg, #ffffff 0%, #f7fbfd 100%);
+  color: #153244;
+  border-radius: 18px;
+  padding: 32px 30px 34px;
+  width: 90%;
+  max-width: 440px;
+  position: relative;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(94, 234, 212, 0.25);
+
+  animation: scaleIn 0.35s cubic-bezier(.2,.8,.2,1);
+}
+
+.modal-contacto h2 {
+  margin: 0 0 12px;
+  font-size: 1.55em;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.modal-contacto h2::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: #5eead4;
+  margin: 10px auto 0;
+  border-radius: 3px;
+}
+
+.modal-texto {
+  font-size: 0.96em;
+  line-height: 1.6;
+  margin: 22px 0 0;
+  color: #1a3a4a;
+}
+
+.mail-link {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: rgba(94, 234, 212, 0.15);
+  color: #153244;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.mail-link:hover {
+  background: #5eead4;
+  color: #0f2a38;
+  transform: translateY(-1px);
+}
+
+.modal-cerrar {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(21, 50, 68, 0.08);
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #153244;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.modal-cerrar:hover {
+  background: #5eead4;
+  color: #0f2a38;
+  transform: rotate(90deg);
+}
+
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.92) translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+.mail-box {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0 5px;
+}
+
+.mail-principal {
+  background: #5eead4;
+  color: #0f2a38;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.mail-principal:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.modal-ayuda {
+  font-size: 0.85em;
+  opacity: 0.85;
+  margin-top: 10px;
+}
+
+.mail-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 15px 0;
+  flex-wrap: wrap;
+}
+
+.mail-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.85em;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.mail-btn.copiar {
+  background: #153244;
+  color: #ffffff;
+}
+
+.mail-btn.copiar:hover {
+  background: #1a3a4a;
+  transform: translateY(-1px);
+}
+
+.mail-btn.gmail {
+  background: transparent;
+  color: #153244;
+  border: 2px solid #5eead4;
+}
+
+.mail-btn.gmail:hover {
+  background: #5eead4;
+  color: #0f2a38;
+  transform: translateY(-1px);
+}
+
+.mail-feedback {
+  font-size: 0.8em;
+  color: #0f5132;
+  font-weight: 600;
+  margin-top: 8px;
+}

@@ -1,0 +1,313 @@
+<div class="welcome-modal-overlay" *ngIf="mostrarModalBienvenida" (click)="cerrarModal()">
+  <div class="welcome-modal-container" (click)="$event.stopPropagation()">
+    <button class="modal-close-btn" (click)="cerrarModal()" aria-label="Cerrar modal">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="modal-welcome-header">
+      <div class="header-badge">
+        <i class="fas fa-graduation-cap"></i>
+        <span class="badge-text">Inscripción RefuerzaT</span>
+      </div>
+      <h2 class="modal-welcome-title">
+        Bienvenido/a al programa <span class="highlight">RefuerzaT</span>
+      </h2>
+      <p class="modal-welcome-subtitle">
+        Elegí el programa en el cual estás interesado/a en inscribirte
+      </p>
+    </div>
+
+    <div class="programas-grid-container">
+      <div class="programas-grid">
+        <div
+          class="programa-banner-card"
+          *ngFor="let programa of programas"
+          (click)="seleccionarProgramaInicial(programa)"
+          [class.selected]="programaSeleccionadoTemporal?.idPrograma === programa.idPrograma"
+          role="button"
+          [attr.aria-label]="'Seleccionar programa: ' + programa.nombre"
+          tabindex="0"
+        ><!-- Alerta si es COMPLEMENTARIA -->
+
+          <div class="banner-image-wrapper">
+            <img
+              [src]="getImagenPrograma(programa)"
+              [alt]="programa.nombre"
+              class="banner-image"
+              (error)="onImageError($event)"
+            />
+            <div class="banner-overlay">
+              <div class="overlay-content">
+                <p class="banner-description" *ngIf="programa.descripcion">
+                  {{ programa.descripcion | slice:0:100 }}{{ programa.descripcion.length > 100 ? '...' : '' }}
+                </p>
+                <span class="banner-cta">
+                  <i class="fas fa-arrow-right"></i> Seleccionar
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="banner-check" *ngIf="programaSeleccionadoTemporal?.idPrograma === programa.idPrograma">
+            <i class="fas fa-check check-icon"></i>
+          </div>
+          <div class="banner-footer">
+            <h4 class="programa-nombre">{{ programa.nombre }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="modal-info-pills">
+        <div class="info-pill">
+          <i class="fas fa-clipboard-list pill-icon"></i>
+          <span class="pill-text">Completá el formulario</span>
+        </div>
+        <div class="info-pill">
+          <i class="fas fa-users pill-icon"></i>
+          <span class="pill-text">Elegí tu comisión</span>
+        </div>
+        <div class="info-pill">
+          <i class="fas fa-book-open pill-icon"></i>
+          <span class="pill-text">Comenzá tu formación</span>
+        </div>
+      </div>
+
+      <button
+        class="btn-continuar"
+        [disabled]="!programaSeleccionadoTemporal"
+        (click)="confirmarSeleccionPrograma()"
+      >
+        <span *ngIf="programaSeleccionadoTemporal">
+          Continuar con {{ programaSeleccionadoTemporal.nombre }}
+          <i class="fas fa-arrow-right ml-2"></i>
+        </span>
+        <span *ngIf="!programaSeleccionadoTemporal">
+          Seleccioná un programa para continuar
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+<h2 class="titulo-formulario">Formulario de Inscripción</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" autocomplete="off">
+
+  <div *ngIf="exito" class="alert alert-success">
+    <i class="fas fa-check-circle"></i>
+    <span>Tu inscripción se realizó correctamente</span>
+  </div>
+
+  <div *ngIf="errorGeneral" class="error-general">
+    <i class="fas fa-exclamation-circle"></i>
+    {{ errorGeneral }}
+  </div>
+
+  <h3><i class="fas fa-user section-icon"></i> Datos personales</h3>
+
+  <label>
+    Nombre *
+    <input
+      type="text"
+      formControlName="nombre"
+      (input)="soloLetras($event, 'nombre')"
+      autocomplete="new-password"
+      [class.input-error]="mostrarError('nombre')"
+    />
+    <small class="error-text" *ngIf="mostrarError('nombre')">
+      <i class="fas fa-exclamation-triangle"></i>
+      {{ obtenerMensajeError('nombre') }}
+    </small>
+  </label>
+
+  <label>
+    Apellido *
+    <input
+      type="text"
+      formControlName="apellido"
+      (input)="soloLetras($event, 'apellido')"
+      autocomplete="new-password"
+      [class.input-error]="mostrarError('apellido')"
+    />
+    <small class="error-text" *ngIf="mostrarError('apellido')">
+      <i class="fas fa-exclamation-triangle"></i>
+      {{ obtenerMensajeError('apellido') }}
+    </small>
+  </label>
+
+  <label>
+    DNI *
+    <input
+      type="text"
+      formControlName="dni"
+      (input)="soloNumeros($event, 'dni', 8)"
+      placeholder="12345678"
+      autocomplete="new-password"
+      [class.input-error]="mostrarError('dni')"
+    />
+    <small class="error-text" *ngIf="mostrarError('dni')">
+      <i class="fas fa-exclamation-triangle"></i>
+      {{ obtenerMensajeError('dni') }}
+    </small>
+  </label>
+
+  <label>
+    Correo electrónico *
+    <input
+      type="email"
+      formControlName="correoElectronico"
+      placeholder="ejemplo@correo.com"
+      autocomplete="new-password"
+      [class.input-error]="mostrarError('correoElectronico')"
+    />
+    <small class="error-text" *ngIf="mostrarError('correoElectronico')">
+      <i class="fas fa-exclamation-triangle"></i>
+      {{ obtenerMensajeError('correoElectronico') }}
+    </small>
+  </label>
+
+  <label>
+    Teléfono celular
+    <input
+      type="text"
+      formControlName="telefonoCelular"
+      (input)="soloNumeros($event, 'telefonoCelular', 15)"
+      placeholder="1150123456"
+      autocomplete="new-password"
+      [class.input-error]="mostrarError('telefonoCelular')"
+    />
+    <small class="error-text" *ngIf="mostrarError('telefonoCelular')">
+      <i class="fas fa-exclamation-triangle"></i>
+      {{ obtenerMensajeError('telefonoCelular') }}
+    </small>
+  </label>
+
+  <label>
+    Dirección
+    <input
+      type="text"
+      formControlName="direccion"
+      placeholder="Calle 123, Piso 4, Depto A"
+      autocomplete="new-password"
+      [class.input-error]="mostrarError('direccion')"
+    />
+    <small class="error-text" *ngIf="mostrarError('direccion')">
+      <i class="fas fa-exclamation-triangle"></i>
+      {{ obtenerMensajeError('direccion') }}
+    </small>
+  </label>
+
+  <!-- Datos del emprendimiento -->
+  <h3><i class="fas fa-briefcase section-icon"></i> Datos del emprendimiento</h3>
+
+  <label>
+    Nombre del emprendimiento
+    <input
+      type="text"
+      formControlName="nombreEmprendimiento"
+      autocomplete="new-password"
+      [class.input-error]="mostrarError('nombreEmprendimiento')"
+    />
+    <small class="error-text" *ngIf="mostrarError('nombreEmprendimiento')">
+      <i class="fas fa-exclamation-triangle"></i>
+      {{ obtenerMensajeError('nombreEmprendimiento') }}
+    </small>
+  </label>
+
+  <label>
+    Sector del emprendimiento *
+    <select formControlName="sectorEmprendimiento" [class.input-error]="mostrarError('sectorEmprendimiento')">
+      <option value="">Seleccioná un sector</option>
+      <option *ngFor="let sector of sectores" [value]="sector.value">
+        {{ sector.label }}
+      </option>
+    </select>
+    <small class="error-text" *ngIf="mostrarError('sectorEmprendimiento')">
+      <i class="fas fa-exclamation-triangle"></i>
+      {{ obtenerMensajeError('sectorEmprendimiento') }}
+    </small>
+  </label>
+
+  <label>
+    Comuna *
+    <select formControlName="comuna" [class.input-error]="mostrarError('comuna')">
+      <option value="">Seleccioná una comuna</option>
+      <option *ngFor="let comuna of comunas" [value]="comuna.value">
+        {{ comuna.label }}
+      </option>
+    </select>
+    <small class="error-text" *ngIf="mostrarError('comuna')">
+      <i class="fas fa-exclamation-triangle"></i>
+      {{ obtenerMensajeError('comuna') }}
+    </small>
+  </label>
+
+  <label>
+    Etapa del emprendimiento *
+    <select formControlName="etapaEmprendimiento" [class.input-error]="mostrarError('etapaEmprendimiento')">
+      <option value="">Seleccioná una etapa</option>
+      <option *ngFor="let etapa of etapas" [value]="etapa.value">
+        {{ etapa.label }}
+      </option>
+    </select>
+    <small class="error-text" *ngIf="mostrarError('etapaEmprendimiento')">
+      <i class="fas fa-exclamation-triangle"></i>
+      {{ obtenerMensajeError('etapaEmprendimiento') }}
+    </small>
+  </label>
+
+  <!-- Programa y comisión -->
+  <h3><i class="fas fa-calendar-alt section-icon"></i> Programa y comisión</h3>
+
+  <label>
+    Programa *
+    <select formControlName="programaId" [class.input-error]="mostrarError('programaId')" [disabled]="programaPreseleccionado">
+      <option value="">Seleccioná un programa</option>
+      <option *ngFor="let programa of programas" [value]="programa.idPrograma">
+        {{ programa.nombre }}
+      </option>
+    </select>
+    <small class="info-text" *ngIf="programaPreseleccionado">
+      <i class="fas fa-check-circle"></i>
+      Programa seleccionado desde el modal de bienvenida
+    </small>
+    <small class="error-text" *ngIf="mostrarError('programaId')">
+      <i class="fas fa-exclamation-triangle"></i>
+      {{ obtenerMensajeError('programaId') }}
+    </small>
+  </label>
+
+  <label>
+    Comisión *
+    <select formControlName="comisionId" [class.input-error]="mostrarError('comisionId')" [disabled]="comisiones.length === 0">
+      <option value="">{{ comisiones.length === 0 ? 'Primero seleccioná un programa' : 'Seleccioná una comisión' }}</option>
+      <option *ngFor="let comision of comisiones" [value]="comision.idComision">
+        {{ comision.turno }}° GRUPO – {{ comision.dias }} – {{ comision.horario }}
+      </option>
+    </select>
+    <small class="error-text" *ngIf="mostrarError('comisionId')">
+      <i class="fas fa-exclamation-triangle"></i>
+      {{ obtenerMensajeError('comisionId') }}
+    </small>
+  </label>
+
+  <!-- Información importante -->
+  <div class="info-box">
+    <i class="fas fa-info-circle"></i>
+    <span>
+      Asegurate de completar todos los campos marcados con <strong>*</strong> para poder enviar tu inscripción.
+    </span>
+  </div>
+
+  <!-- Botón de envío -->
+  <button
+    type="submit"
+    [disabled]="loading"
+  >
+    <span *ngIf="!loading">
+      <i class="fas fa-paper-plane"></i> Enviar inscripción
+    </span>
+    <span *ngIf="loading">
+      <i class="fas fa-spinner fa-spin"></i> Enviando...
+    </span>
+  </button>
+
+</form>

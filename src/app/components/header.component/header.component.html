@@ -1,0 +1,67 @@
+
+@if(mostrarModalContacto){
+<div class="modal-overlay" (click)="cerrarContacto()">
+  <div class="modal-contacto" (click)="$event.stopPropagation()">
+    <button class="modal-cerrar" (click)="cerrarContacto()">✕</button>
+    <h2>Contacto</h2>
+    <p class="modal-texto">
+  Para más consultas escribínos a
+</p>
+<div class="mail-box">
+  <span class="mail-principal" (click)="abrirMail($event)">
+    info&#64;refuerzat.ar
+  </span>
+</div>
+<p class="modal-texto modal-ayuda">
+  Si no se abre tu correo automáticamente, podés copiar el mail
+  o escribirnos desde Gmail.
+</p>
+<div class="mail-actions">
+  <button class="mail-btn copiar" (click)="copiarMail()">
+    Copiar mail
+  </button>
+
+  <a
+    class="mail-btn gmail"
+    href="https://mail.google.com/mail/?view=cm&fs=1&to=info@refuerzat.ar&su"
+    target="_blank"
+    rel="noopener"
+  >
+    Abrir Gmail
+  </a>
+</div>
+@if(mailCopiado){
+<p class="mail-feedback">
+  Mail copiado al portapapeles ✔
+</p>
+}
+<p class="modal-texto">
+  Dejanos tu <strong>nombre completo</strong>,
+  <strong>DNI</strong> y
+  <strong>tecnología de interés</strong>
+  para que podamos ayudarte.
+</p>
+
+  </div>
+</div>
+}
+
+
+
+
+<header class="headerInicio">
+  <div class="logoContainer">
+    <img src="assets/imagenes/ba_vamosba_blanco.webp" class="logoBuenosAires" alt="logo buenos aires blanco">
+  </div>
+
+  <div class="header-text">
+    <h1 class="main-title"></h1>
+  </div>
+
+  <div class="hero-header">
+    <div class="hero-nav">
+      <button class="nav-btn" (click)="abrirContacto()">Contacto</button>
+    </div>
+  </div>
+</header>
+

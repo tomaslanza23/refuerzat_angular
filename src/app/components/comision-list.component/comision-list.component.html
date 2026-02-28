@@ -1,0 +1,213 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="fas fa-users"></i>
+        Gestión de Comisiones
+      </h1>
+      <p class="page-subtitle">
+        Administrá las comisiones de los programas RefuerzaT
+      </p>
+    </div>
+    <button class="btn-nuevo" (click)="nuevaComision()">
+      <i class="fas fa-plus"></i>
+      Nueva Comisión
+    </button>
+  </div>
+
+  <div class="filters-section">
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input
+        type="text"
+        placeholder="Buscar por código, programa, días, horario..."
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label">
+        <i class="fas fa-graduation-cap"></i>
+        Programa:
+      </label>
+      <select
+        class="filter-select"
+        [value]="filtroProgramaId() || ''"
+        (change)="cambiarFiltroPrograma($any($event.target).value)"
+      >
+        <option value="">Todos los programas</option>
+        <option *ngFor="let programa of programas()" [value]="programa.idPrograma">
+          {{ programa.nombre }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-tabs">
+      <button
+        class="filter-tab"
+        [class.active]="filtroActivo() === 'todas'"
+        (click)="cambiarFiltro('todas')"
+      >
+        Todas
+        <span class="count">{{ contadores().todas }}</span>
+      </button>
+      <button
+        class="filter-tab"
+        [class.active]="filtroActivo() === 'activas'"
+        (click)="cambiarFiltro('activas')"
+      >
+        Activas
+        <span class="count activas">{{ contadores().activas }}</span>
+      </button>
+      <button
+        class="filter-tab"
+        [class.active]="filtroActivo() === 'inactivas'"
+        (click)="cambiarFiltro('inactivas')"
+      >
+        Inactivas
+        <span class="count inactivas">{{ contadores().inactivas }}</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="loading-state" *ngIf="loading()">
+    <i class="fas fa-spinner fa-spin"></i>
+    <p>Cargando comisiones...</p>
+  </div>
+
+  <div class="error-state" *ngIf="error()">
+    <i class="fas fa-exclamation-triangle"></i>
+    <p>{{ error() }}</p>
+    <button class="btn-retry" (click)="cargarDatos()">
+      <i class="fas fa-redo"></i>
+      Reintentar
+    </button>
+  </div>
+
+  <div class="comisiones-grid" *ngIf="!loading() && !error()">
+    <div
+      class="comision-card"
+      *ngFor="let comision of comisionesFiltradas()"
+      [class.inactiva]="!comision.activa"
+    >
+      <div class="card-header">
+        <div class="header-left">
+          <h3 class="comision-codigo">{{ comision.codigoComision }}</h3>
+          <span class="programa-badge">
+            <i class="fas fa-graduation-cap"></i>
+            {{ comision.programaNombre }}
+          </span>
+        </div>
+        <div class="header-right">
+          <span
+            class="status-badge"
+            [class.activa]="comision.activa"
+            [class.inactiva]="!comision.activa"
+          >
+            <i class="fas" [class.fa-check-circle]="comision.activa" [class.fa-times-circle]="!comision.activa"></i>
+            {{ comision.activa ? 'Activa' : 'Inactiva' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="info-row">
+          <i class="fas fa-calendar-alt"></i>
+          <span><strong>Días:</strong> {{ comision.dias }}</span>
+        </div>
+        <div class="info-row">
+          <i class="fas fa-clock"></i>
+          <span><strong>Horario:</strong> {{ comision.horario }}</span>
+        </div>
+        <div class="info-row">
+          <i class="fas fa-map-marker-alt"></i>
+          <span><strong>Lugar:</strong> {{ comision.lugar }}</span>
+        </div>
+        <div class="info-row">
+          <i class="fas fa-tag"></i>
+          <span><strong>Turno:</strong> {{ comision.turno }}</span>
+        </div>
+
+        <div class="cupos-section">
+          <div class="cupos-header">
+            <span class="cupos-label">
+              <i class="fas fa-users"></i>
+              Cupos
+            </span>
+            <span class="cupos-numeros">
+              {{ comision.cuposOcupados }} / {{ comision.cupoTotal }}
+            </span>
+          </div>
+          <div class="cupos-barra">
+            <div
+              class="cupos-progreso"
+              [class]="getClaseCupo(comision)"
+              [style.width.%]="getPorcentajeCupo(comision)"
+            ></div>
+          </div>
+          <span class="cupos-disponibles" [class.completo]="comision.cuposDisponibles === 0">
+            {{ comision.cuposDisponibles }} disponibles
+          </span>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button
+          class="btn-action btn-edit"
+          (click)="editarComision(comision.idComision)"
+        >
+          <i class="fas fa-edit"></i>
+          Editar
+        </button>
+        <button
+          class="btn-action btn-toggle"
+          (click)="abrirModalCambioEstado(comision)"
+          [disabled]="!comision.activa && comision.cuposOcupados > 0"
+        >
+          <i class="fas" [class.fa-toggle-on]="comision.activa" [class.fa-toggle-off]="!comision.activa"></i>
+          {{ comision.activa ? 'Desactivar' : 'Activar' }}
+        </button>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="comisionesFiltradas().length === 0">
+      <i class="fas fa-inbox"></i>
+      <h3>No hay comisiones</h3>
+      <p>No se encontraron comisiones con los filtros aplicados</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="mostrarModalConfirmacion" (click)="cerrarModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>
+        <i class="fas fa-exclamation-triangle"></i>
+        Confirmar cambio de estado
+      </h3>
+    </div>
+    <div class="modal-body">
+      <p>
+        ¿Estás seguro de que querés
+        <strong>{{ comisionParaCambiar?.activa ? 'desactivar' : 'activar' }}</strong>
+        la comisión
+        <strong>{{ comisionParaCambiar?.codigoComision }}</strong>?
+      </p>
+      <div class="modal-warning" *ngIf="comisionParaCambiar?.activa">
+        <i class="fas fa-info-circle"></i>
+        Las comisiones inactivas no aparecen en el formulario público de inscripción.
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="cerrarModal()">
+        <i class="fas fa-times"></i>
+        Cancelar
+      </button>
+      <button class="btn-confirm" (click)="ejecutarCambioEstado()">
+        <i class="fas fa-check"></i>
+        Confirmar
+      </button>
+    </div>
+  </div>
+</div>
