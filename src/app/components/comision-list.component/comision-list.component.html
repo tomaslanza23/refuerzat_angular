@@ -179,33 +179,28 @@
   </div>
 </div>
 
+<!-- MODAL MEJORADO -->
 <div class="modal-overlay" *ngIf="mostrarModalConfirmacion" (click)="cerrarModal()">
   <div class="modal-container" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h3>
-        <i class="fas fa-exclamation-triangle"></i>
-        Confirmar cambio de estado
-      </h3>
+      <h3>Confirmar cambio de estado</h3>
     </div>
     <div class="modal-body">
       <p>
         ¿Estás seguro de que querés
         <strong>{{ comisionParaCambiar?.activa ? 'desactivar' : 'activar' }}</strong>
-        la comisión
-        <strong>{{ comisionParaCambiar?.codigoComision }}</strong>?
+        la comisión <strong>{{ comisionParaCambiar?.codigoComision }}</strong>?
       </p>
       <div class="modal-warning" *ngIf="comisionParaCambiar?.activa">
         <i class="fas fa-info-circle"></i>
-        Las comisiones inactivas no aparecen en el formulario público de inscripción.
+        <span>Las comisiones inactivas no aparecen en el formulario público de inscripción.</span>
       </div>
     </div>
     <div class="modal-actions">
       <button class="btn-cancel" (click)="cerrarModal()">
-        <i class="fas fa-times"></i>
         Cancelar
       </button>
       <button class="btn-confirm" (click)="ejecutarCambioEstado()">
-        <i class="fas fa-check"></i>
         Confirmar
       </button>
     </div>

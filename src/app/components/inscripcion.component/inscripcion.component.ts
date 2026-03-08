@@ -142,14 +142,14 @@ getImagenPrograma(programa: Programa): string {
     input.value = valorLimpio;
     this.form.get(fieldName)?.setValue(valorLimpio, { emitEvent: false });
   }
-
 onSubmit(): void {
   this.errores = {};
   this.errorGeneral = null;
 
   if (this.form.invalid) {
-    this.errorGeneral = 'Por favor, completá todos los campos obligatorios';
+    this.errorGeneral = 'Por favor, completá todos los campos obligatorios marcados con *';
     this.form.markAllAsTouched();
+    
     setTimeout(() => {
       const firstInvalidControl = document.querySelector('.ng-invalid:not(form)');
       if (firstInvalidControl) {
@@ -173,21 +173,36 @@ onSubmit(): void {
       },
       error: err => {
         this.loading = false;
+        console.error('Error completo:', err);
+        
         const errorBody = err?.error;
 
         if (errorBody?.field && errorBody?.message) {
-          this.errores[errorBody.field] = errorBody.message;
-          this.form.get(errorBody.field)?.setErrors({ api: errorBody.message });
-          const fieldEl = document.querySelector(`[formControlName="${errorBody.field}"]`);
-          fieldEl?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          let field = errorBody.field;
+          const message = errorBody.message;
+        
+          if (field === 'requiereTroncal') {
+            field = 'programaId';
+          }
+          
+          this.errores[field] = message;
+          this.form.get(field)?.setErrors({ api: message });
+          this.form.get(field)?.markAsTouched();
+          setTimeout(() => {
+            const fieldEl = document.querySelector(`[formControlName="${field}"]`);
+            if (fieldEl) {
+              fieldEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              (fieldEl as HTMLElement).focus();
+            }
+          }, 100);
+          
         } else {
-          this.errorGeneral = errorBody?.message || 'Ocurrió un error al procesar la inscripción';
+          this.errorGeneral = errorBody?.message || 'Ocurrió un error al procesar tu inscripción. Por favor, intentá nuevamente.';
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       }
     });
-}
-mostrarAlertaComplementaria(): boolean {
+}mostrarAlertaComplementaria(): boolean {
   const programaId = this.form.get('programaId')?.value;
   if (!programaId) return false;
 
@@ -200,35 +215,30 @@ mostrarAlertaComplementaria(): boolean {
   }
 
   obtenerMensajeError(fieldName: string): string {
-    const field = this.form.get(fieldName);
-  if (this.errores[fieldName]) {
-    if (this.errores[fieldName] === 'requiereTroncal' ||
-        (fieldName === 'programaId' && this.errores['requiereTroncal'])) {
-      return 'Debes estar cursando o haber completado una Formación Troncal para inscribirte a Jornadas Complementarias';
-    }
-    if (this.errores[fieldName]) {
-      return this.errores[fieldName];
-    }
+  const field = this.form.get(fieldName);
 
-    if (field?.errors?.['required']) {
+  if (this.errores[fieldName]) {
+    return this.errores[fieldName]; 
+  }
+
+  if (fieldName === 'programaId' && this.errores['requiereTroncal']) {
+    return this.errores['requiereTroncal'];
+  }
+
+  if (field?.invalid && (field.dirty || field.touched)) {
+    if (field.errors?.['required']) {
       return 'Este campo es obligatorio';
     }
 
-    if (field?.errors?.['email']) {
-      return 'Ingresá un correo electrónico válido';
+    if (field.errors?.['email']) {
+      return 'Ingresá un correo electrónico válido (ejemplo@correo.com)';
     }
 
-    if (field?.errors?.['api']) {
+    if (field.errors?.['api']) {
       return field.errors['api'];
     }
-    switch (fieldName) {
-      case 'dni': return 'Ya existe una inscripción con este DNI';
-      case 'programaId': return 'El programa seleccionado no está disponible';
-      case 'comisionId': return 'La comisión seleccionada no está disponible o no tiene cupos';
-      case 'correoElectronico': return 'El correo electrónico es inválido';
-      default: return this.errores[fieldName];
-    }
   }
+
   return '';
 }
 }

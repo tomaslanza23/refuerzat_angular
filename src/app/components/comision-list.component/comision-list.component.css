@@ -449,70 +449,119 @@
   margin: 0;
 }
 
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+:root {
+  --primary-dark: #1a3a4a;
+  --primary-medium: #2c5f7a;
+  --secondary-light: #5eead4;
+  --secondary-medium: #8ee2d6;
+  --accent-yellow: #fbbf24;
+  --bg-light: #f8f9fa;
+  --text-primary: #1a3a4a;
+  --text-secondary: #475569;
+  --border-light: #e2e8f0;
+  --white: #ffffff;
+  --error: #dc2626;
+  --success: #10b981;
+}
+
+/* MODAL STYLES - MEJORADOS PARA MINISTERIO */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(26, 58, 74, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
   padding: 1rem;
+  backdrop-filter: blur(2px);
 }
 
 .modal-container {
   background: var(--white);
-  border-radius: 16px;
-  max-width: 500px;
+  border-radius: 12px;
+  max-width: 520px;
   width: 100%;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 25px 50px rgba(26, 58, 74, 0.25);
+  overflow: hidden;
 }
 
 .modal-header {
-  padding: 1.5rem 2rem;
+  padding: 2rem;
   background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
   color: var(--white);
-  border-radius: 16px 16px 0 0;
 }
 
 .modal-header h3 {
   margin: 0;
-  font-size: 1.25rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  word-wrap: break-word;
 }
 
 .modal-body {
   padding: 2rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.7;
 }
 
 .modal-body p {
-  margin: 0 0 1rem 0;
+  margin: 0 0 1.25rem 0;
   color: var(--text-primary);
-  line-height: 1.6;
+  line-height: 1.7;
+  font-size: 0.95rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.modal-body p:last-of-type {
+  margin-bottom: 0;
+}
+
+.modal-body strong {
+  color: var(--primary-dark);
+  font-weight: 600;
+  white-space: normal;
+  word-break: normal;
+  display: inline;
 }
 
 .modal-warning {
-  padding: 1rem;
-  background: #eff6ff;
-  border-left: 4px solid var(--secondary-light);
-  border-radius: 8px;
-  color: var(--primary-dark);
+  padding: 1.25rem;
+  background: #fef9e7;
+  border-left: 4px solid #d97706;
+  border-radius: 6px;
+  color: #92400e;
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  align-items: flex-start;
+  gap: 1rem;
   font-size: 0.9rem;
+  line-height: 1.6;
+  margin-top: 1.25rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.modal-warning i {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  color: #d97706;
+  margin-top: 0.05rem;
 }
 
 .modal-actions {
   display: flex;
   gap: 1rem;
   padding: 1.5rem 2rem;
-  border-top: 2px solid var(--border-light);
+  background: #f9fafb;
+  border-top: 1px solid var(--border-light);
 }
 
 .btn-cancel,
@@ -520,24 +569,26 @@
   flex: 1;
   padding: 0.875rem 1.5rem;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
 }
 
 .btn-cancel {
   background: var(--white);
   color: var(--text-primary);
-  border: 2px solid var(--border-light);
+  border: 1.5px solid var(--border-light);
 }
 
 .btn-cancel:hover {
   background: var(--border-light);
+  border-color: var(--border-light);
 }
 
 .btn-confirm {
@@ -546,30 +597,7 @@
 }
 
 .btn-confirm:hover {
-  background: var(--secondary-light);
-  color: var(--primary-dark);
-}
-
-@media (max-width: 768px) {
-  .admin-header {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .btn-nuevo {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .filter-tabs {
-    flex-direction: column;
-  }
-
-  .comisiones-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .card-actions {
-    flex-direction: column;
-  }
+  background: var(--primary-medium);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(26, 58, 74, 0.2);
 }

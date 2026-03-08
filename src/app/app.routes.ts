@@ -44,18 +44,18 @@ export const routes: Routes = [
       import('./components/programa-form.component/programa-form.component')
         .then(m => m.ProgramaFormComponent)
   },  {
-    path: 'admin/comision',
+    path: 'admin/comisiones',
     loadComponent: () =>
       import('./components/comision-list.component/comision-list.component')
         .then(m => m.ComisionListComponent)
   },  {
-    path: 'admin/comision/editar/:id',
+    path: 'admin/comisiones/editar/:id',
     loadComponent: () =>
       import('./components/comision-form.component/comision-form.component')
         .then(m => m.ComisionFormComponent)
   },
   {
-    path: 'admin/comision/nueva',
+    path: 'admin/comisiones/nueva',
     loadComponent: () =>
       import('./components/comision-form.component/comision-form.component')
         .then(m => m.ComisionFormComponent)
