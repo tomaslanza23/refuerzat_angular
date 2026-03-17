@@ -1,8 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
-/* ==========================================
-   VARIABLES DE COLORES GCBA
-   ========================================== */
 :root {
   --primary-dark: #1a3a4a;
   --primary-medium: #2c5f7a;
@@ -19,9 +16,6 @@
   --success: #10b981;
 }
 
-/* ==========================================
-   CONTENEDOR PRINCIPAL
-   ========================================== */
 .admin-container {
   max-width: 900px;
   margin: 0 auto;
@@ -30,7 +24,6 @@
   background: var(--bg-lighter);
 }
 
-/* Header */
 .admin-header {
   padding: 2rem;
   background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
@@ -64,9 +57,6 @@
   opacity: 0.95;
 }
 
-/* ==========================================
-   CARD DEL FORMULARIO
-   ========================================== */
 .form-card {
   background: var(--white);
   border-radius: 12px;
@@ -74,9 +64,6 @@
   box-shadow: 0 4px 20px rgba(26, 58, 74, 0.1);
 }
 
-/* ==========================================
-   GRUPOS DEL FORMULARIO
-   ========================================== */
 .form-group {
   margin-bottom: 1.75rem;
 }
@@ -101,9 +88,6 @@
   font-weight: 700;
 }
 
-/* ==========================================
-   INPUTS Y TEXTAREAS
-   ========================================== */
 .form-input,
 .form-textarea {
   width: 100%;
@@ -140,9 +124,6 @@
   opacity: 0.6;
 }
 
-/* ==========================================
-   HINTS Y AYUDAS
-   ========================================== */
 .form-hint {
   display: block;
   margin-top: 0.5rem;
@@ -174,9 +155,6 @@
   margin-bottom: 0.25rem;
 }
 
-/* ==========================================
-   PREVIEW DE IMAGEN
-   ========================================== */
 .image-preview {
   margin-top: 1rem;
   padding: 1rem;
@@ -209,9 +187,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* ==========================================
-   TOGGLE DE ESTADO (ACTIVO/INACTIVO)
-   ========================================== */
 .status-toggle {
   display: flex;
   align-items: center;
@@ -275,9 +250,6 @@
   color: #94a3b8;
 }
 
-/* ==========================================
-   MENSAJES DE ERROR
-   ========================================== */
 .form-error {
   margin-top: 0.5rem;
   padding: 0.625rem 0.875rem;
@@ -316,9 +288,6 @@
   font-size: 1.3rem;
 }
 
-/* ==========================================
-   BOTONES DE ACCIÓN
-   ========================================== */
 .form-actions {
   display: flex;
   gap: 1rem;
@@ -380,9 +349,6 @@
   font-size: 1.1rem;
 }
 
-/* ==========================================
-   RESPONSIVE
-   ========================================== */
 @media (max-width: 768px) {
   .admin-container {
     padding: 1rem;
@@ -439,9 +405,6 @@
   }
 }
 
-/* ==========================================
-   ANIMACIONES
-   ========================================== */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -457,7 +420,6 @@
   animation: fadeIn 0.4s ease-out;
 }
 
-/* Estilos específicos para inscriptos */
 h3 {
   grid-column: 1 / -1;
   margin-top: 2rem;

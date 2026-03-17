@@ -1,5 +1,5 @@
 <div class="admin-container">
-  <!-- Header Section -->
+  
   <div class="admin-header">
     <div class="header-content">
       <h1 class="page-title">
@@ -15,7 +15,6 @@
     </button>
   </div>
 
-  <!-- Search and Filter Bar -->
   <div class="filter-section" *ngIf="!cargando">
     <div class="search-box">
       <span class="search-icon">
@@ -61,13 +60,13 @@
     </div>
   </div>
 
-  <!-- Loading State -->
+  
   <div class="loading-container" *ngIf="cargando">
     <div class="spinner"></div>
     <p class="loading-text">Cargando programas...</p>
   </div>
 
-  <!-- Error State -->
+  
   <div class="error-container" *ngIf="error && !cargando">
     <div class="error-icon"></div>
     <h3 class="error-title">Error al cargar programas</h3>
@@ -77,7 +76,7 @@
     </button>
   </div>
 
-  <!-- Empty State -->
+  
   <div class="empty-container" *ngIf="!cargando && programasFiltrados.length === 0 && !error">
     <div class="empty-icon"></div>
     <h3 class="empty-title">
@@ -93,14 +92,12 @@
     </button>
   </div>
 
-  <!-- Programs Grid -->
   <div class="programs-grid" *ngIf="!cargando && programasFiltrados.length > 0">
     <div
       class="program-card"
       *ngFor="let programa of programasFiltrados"
       [class.inactive]="!programa.activo"
     >
-      <!-- Card Header -->
       <div class="card-header">
         <div class="card-title-section">
           <h3 class="program-name">{{ programa.nombre }}</h3>
@@ -115,13 +112,11 @@
         </div>
       </div>
 
-      <!-- Card Body -->
       <div class="card-body">
         <p class="program-description">
           {{ programa.descripcion || 'Sin descripción disponible' }}
         </p>
 
-        <!-- Stats Section -->
         <div class="program-stats">
           <div class="stat-item">
             <span class="stat-icon"></span>
@@ -131,7 +126,6 @@
         </div>
       </div>
 
-      <!-- Card Actions -->
       <div class="card-actions">
         <button
           class="btn-action btn-edit"
@@ -156,7 +150,6 @@
     </div>
   </div>
 
-  <!-- Results Counter -->
   <div class="results-footer" *ngIf="!cargando && programasFiltrados.length > 0">
     <p class="results-text">
       Mostrando <strong>{{ programasFiltrados.length }}</strong>
@@ -166,7 +159,6 @@
   </div>
 </div>
 
-<!-- Confirmation Modal -->
 <div class="modal-overlay" *ngIf="programaParaCambiar" (click)="cancelarCambioEstado()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <div class="modal-header">
@@ -183,13 +175,13 @@
         el programa <strong>"{{ programaParaCambiar.nombre }}"</strong>?
       </p>
 
-      <div class="modal-info" *ngIf="programaParaCambiar.activo">
-        <span class="info-icon"></span>
-        <p class="info-text">
-          No podrás desactivar este programa si tiene comisiones activas asociadas.
-        </p>
-      </div>
-    </div>
+<div class="modal-info" *ngIf="programaParaCambiar?.activo">
+  <span class="info-icon">⚠️</span>
+  <p class="info-text">
+    Al desactivar este programa, <strong>todas sus comisiones activas también serán desactivadas</strong>.
+    Los inscriptos existentes no serán eliminados.
+  </p>
+</div>
 
     <div class="modal-actions">
       <button class="btn-modal btn-cancel" (click)="cancelarCambioEstado()">

@@ -101,32 +101,28 @@ mostrarModalConfirmacion = false;
     this.procesandoCambio = false;
   }
 
-    ejecutarCambioEstado(): void {
+ejecutarCambioEstado(): void {
     if (!this.programaParaCambiar) return;
     const programa = this.programaParaCambiar;
     const nuevoEstado = !programa.activo;
 
     this.programaService.actualizarPrograma(programa.idPrograma, {
-      nombre: programa.nombre,
-      descripcion: programa.descripcion,
-      tipoFormacion: programa.tipoFormacion,
-      imagenUrl: programa.imagenUrl,
-      activo: nuevoEstado
+        nombre: programa.nombre,
+        descripcion: programa.descripcion,
+        tipoFormacion: programa.tipoFormacion,
+        imagenUrl: programa.imagenUrl,
+        activo: nuevoEstado
     }).subscribe({
-      next: () => {
-        this.cargarDatos();
-        this.cerrarModal();
-      },
-      error: (err) => {
-        if (err.error === 'activo') {
-          alert('No se puede desactivar un programa con comisiones activas');
-        } else {
-          alert('Error al cambiar el estado del programa');
+        next: () => {
+            this.cargarProgramas(); // unificá con cargarDatos(), son lo mismo
+            this.cerrarModal();
+        },
+        error: () => {
+            alert('Error al cambiar el estado del programa');
+            this.cerrarModal();
         }
-        this.cerrarModal();
-      }
     });
-  }
+}
 
   private mostrarNotificacion(mensaje: string, tipo: 'success' | 'error'): void {
     if (tipo === 'error') {

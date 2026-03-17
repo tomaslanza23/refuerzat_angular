@@ -1,1 +1,77 @@
-<p>login.component works!</p>
+<div class="login-container">
+  <div class="login-card">
+
+    <div class="login-header">
+      <i class="fas fa-graduation-cap"></i>
+      <h1>RefuerzaT</h1>
+      <p>Panel de Administración</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+      <div class="error-global" *ngIf="error">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ error }}
+      </div>
+
+      <div class="form-group">
+        <label>
+          <i class="fas fa-user"></i>
+          Usuario o Email
+        </label>
+        <input
+          type="text"
+          formControlName="identifier"
+          placeholder="Ingresá tu usuario o email"
+          [class.input-error]="hasError('identifier')"
+          autocomplete="username"
+        />
+        <small class="error-text" *ngIf="hasError('identifier')">
+          <i class="fas fa-exclamation-triangle"></i>
+          {{ getErrorMessage('identifier') }}
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <i class="fas fa-lock"></i>
+          Contraseña
+        </label>
+        <div class="password-input-wrapper">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Ingresá tu contraseña"
+            [class.input-error]="hasError('password')"
+            autocomplete="current-password"
+          />
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          >
+            <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+          </button>
+        </div>
+        <small class="error-text" *ngIf="hasError('password')">
+          <i class="fas fa-exclamation-triangle"></i>
+          {{ getErrorMessage('password') }}
+        </small>
+      </div>
+
+      <button type="submit" class="btn-login" [disabled]="loading">
+        <span *ngIf="!loading">
+          <i class="fas fa-sign-in-alt"></i>
+          Ingresar
+        </span>
+        <span *ngIf="loading">
+          <i class="fas fa-spinner fa-spin"></i>
+          Ingresando...
+        </span>
+      </button>
+
+    </form>
+
+  </div>
+</div>

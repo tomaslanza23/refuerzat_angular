@@ -42,7 +42,6 @@ body {
   }
 }
 
-/* Animación de éxito */
 .success-animation {
   display: flex;
   justify-content: center;
@@ -104,7 +103,6 @@ body {
   }
 }
 
-/* Títulos y mensajes */
 .exito-title {
   text-align: center;
   font-size: 2.2rem;
@@ -139,7 +137,6 @@ body {
   font-weight: 600;
 }
 
-/* Sección de información */
 .info-section {
   background: #f0fdf4;
   border: 2px solid #86efac;
@@ -203,7 +200,6 @@ body {
   flex-shrink: 0;
 }
 
-/* Recordatorio */
 .reminder-box {
   display: flex;
   align-items: flex-start;
@@ -241,7 +237,6 @@ body {
   margin: 0;
 }
 
-/* Sección de contacto */
 .contact-section {
   text-align: center;
   margin-bottom: 2rem;
@@ -293,7 +288,6 @@ body {
   font-size: 1.1rem;
 }
 
-/* Botones de acción */
 .action-buttons {
   display: flex;
   gap: 1rem;
@@ -343,7 +337,6 @@ body {
   box-shadow: 0 4px 12px rgba(26, 58, 74, 0.2);
 }
 
-/* Footer del gobierno */
 .government-footer {
   text-align: center;
   padding-top: 2rem;
@@ -368,7 +361,6 @@ body {
   line-height: 1.5;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .exito-card {
     padding: 2.5rem 1.5rem;

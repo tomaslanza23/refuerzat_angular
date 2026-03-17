@@ -449,24 +449,6 @@
   margin: 0;
 }
 
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
-
-:root {
-  --primary-dark: #1a3a4a;
-  --primary-medium: #2c5f7a;
-  --secondary-light: #5eead4;
-  --secondary-medium: #8ee2d6;
-  --accent-yellow: #fbbf24;
-  --bg-light: #f8f9fa;
-  --text-primary: #1a3a4a;
-  --text-secondary: #475569;
-  --border-light: #e2e8f0;
-  --white: #ffffff;
-  --error: #dc2626;
-  --success: #10b981;
-}
-
-/* MODAL STYLES - MEJORADOS PARA MINISTERIO */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -487,8 +469,9 @@
   border-radius: 12px;
   max-width: 520px;
   width: 100%;
-  box-shadow: 0 25px 50px rgba(26, 58, 74, 0.25);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.95);
 }
 
 .modal-header {
@@ -507,6 +490,7 @@
 
 .modal-body {
   padding: 2rem;
+  background: #ffffff;
   word-wrap: break-word;
   overflow-wrap: break-word;
   line-height: 1.7;
@@ -514,9 +498,10 @@
 
 .modal-body p {
   margin: 0 0 1.25rem 0;
-  color: var(--text-primary);
+  color: #1f1f1f;
   line-height: 1.7;
   font-size: 0.95rem;
+  font-weight: 500;
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
@@ -600,4 +585,32 @@
   background: var(--primary-medium);
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(26, 58, 74, 0.2);
+}
+
+@media (max-width: 768px) {
+  .admin-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .btn-nuevo {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .filter-tabs {
+    flex-direction: column;
+  }
+
+  .comisiones-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card-actions {
+    flex-direction: column;
+  }
+  
+  .modal-container {
+    max-width: 95%;
+  }
 }

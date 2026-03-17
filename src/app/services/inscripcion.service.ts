@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/env';
 import { InscripcionRequest } from '../models/inscripcion-request.model';
 import { Inscripto } from '../models/inscripto.model';
@@ -12,16 +13,10 @@ export class InscripcionService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * ENDPOINT PÚBLICO
-   */
   crear(request: InscripcionRequest) {
     return this.http.post(this.api, request);
   }
 
-  /**
-   * ENDPOINTS ADMIN - CRUD
-   */
   getAllInscriptos() {
     return this.http.get<Inscripto[]>(this.adminApi);
   }
@@ -49,25 +44,21 @@ export class InscripcionService {
     return this.http.delete(`${this.adminApi}/${id}`);
   }
 
-  /**
-   * ENDPOINTS DE EXCEL
-   */
-  descargarExcelTodos(): void {
-    const url = `${this.adminApi}/excel/todos`;
-    this.descargarArchivo(url);
+  exportarTodos(): Observable<Blob> {
+    return this.http.get(`${this.adminApi}/excel/todos`, {
+      responseType: 'blob'
+    });
   }
 
-  descargarExcelPorComision(comisionId: number): void {
-    const url = `${this.adminApi}/excel/comision/${comisionId}`;
-    this.descargarArchivo(url);
+  exportarPorPrograma(programaId: number): Observable<Blob> {
+    return this.http.get(`${this.adminApi}/excel/programa/${programaId}`, {
+      responseType: 'blob'
+    });
   }
 
-  descargarExcelPorPrograma(programaId: number): void {
-    const url = `${this.adminApi}/excel/programa/${programaId}`;
-    this.descargarArchivo(url);
-  }
-
-  private descargarArchivo(url: string): void {
-    window.open(url, '_blank');
+  exportarPorComision(comisionId: number): Observable<Blob> {
+    return this.http.get(`${this.adminApi}/excel/comision/${comisionId}`, {
+      responseType: 'blob'
+    });
   }
 }

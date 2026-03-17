@@ -36,17 +36,14 @@ export class InscriptosListComponent implements OnInit {
   inscriptosFiltrados = computed(() => {
     let resultado = this.inscriptos();
 
-    // Filtro por programa
     if (this.filtroProgramaId()) {
       resultado = resultado.filter(i => i.programaId === this.filtroProgramaId());
     }
 
-    // Filtro por comisión
     if (this.filtroComisionId()) {
       resultado = resultado.filter(i => i.comisionId === this.filtroComisionId());
     }
 
-    // Búsqueda
     const termino = this.searchTerm().toLowerCase().trim();
     if (termino) {
       resultado = resultado.filter(i =>
@@ -99,7 +96,7 @@ export class InscriptosListComponent implements OnInit {
 
   cambiarFiltroPrograma(programaId: string): void {
     this.filtroProgramaId.set(programaId ? Number(programaId) : null);
-    this.filtroComisionId.set(null); // Reset comisión al cambiar programa
+    this.filtroComisionId.set(null); 
   }
 
   cambiarFiltroComision(comisionId: string): void {
@@ -144,20 +141,59 @@ export class InscriptosListComponent implements OnInit {
   }
 
   descargarExcelTodos(): void {
-    this.inscripcionService.descargarExcelTodos();
-  }
-
-  descargarExcelPrograma(): void {
-    if (this.filtroProgramaId()) {
-      this.inscripcionService.descargarExcelPorPrograma(this.filtroProgramaId()!);
+  this.inscripcionService.exportarTodos().subscribe({
+    next: (blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `inscriptos_todos_${new Date().getTime()}.xlsx`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    },
+    error: (err) => {
+      console.error('Error al exportar:', err);
+      alert('Error al descargar el archivo Excel');
     }
-  }
+  });
+}
 
-  descargarExcelComision(): void {
-    if (this.filtroComisionId()) {
-      this.inscripcionService.descargarExcelPorComision(this.filtroComisionId()!);
-    }
+descargarExcelPrograma(): void {
+  if (this.filtroProgramaId()) {
+    this.inscripcionService.exportarPorPrograma(this.filtroProgramaId()!).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `inscriptos_programa_${this.filtroProgramaId()}_${new Date().getTime()}.xlsx`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Error al exportar:', err);
+        alert('Error al descargar el archivo Excel');
+      }
+    });
   }
+}
+
+descargarExcelComision(): void {
+  if (this.filtroComisionId()) {
+    this.inscripcionService.exportarPorComision(this.filtroComisionId()!).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `inscriptos_comision_${this.filtroComisionId()}_${new Date().getTime()}.xlsx`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Error al exportar:', err);
+        alert('Error al descargar el archivo Excel');
+      }
+    });
+  }
+}
 
   formatearFecha(fecha: string): string {
     const date = new Date(fecha);

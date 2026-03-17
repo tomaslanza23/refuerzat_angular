@@ -107,7 +107,6 @@ export class ComisionFormComponent implements OnInit {
       return;
     }
 
-    // Validación manual: cupo no puede ser menor a ocupados
     if (this.esEdicion) {
       const nuevoCupo = this.form.get('cupoTotal')?.value;
       if (nuevoCupo < this.cuposOcupadosOriginales) {

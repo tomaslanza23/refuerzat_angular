@@ -94,21 +94,42 @@
 
 <div class="modal-overlay" *ngIf="mostrarModalDescarga" (click)="cerrarModalDescarga()">
   <div class="modal-container" (click)="$event.stopPropagation()">
+    
     <div class="modal-header">
-      <h3><i class="fas fa-file-excel"></i> Descargar Excel</h3>
-      <button class="modal-close" (click)="cerrarModalDescarga()"><i class="fas fa-times"></i></button>
+      <h3><i class="fas fa-file-download"></i> Descargar Excel</h3>
+      <button class="modal-close" (click)="cerrarModalDescarga()" aria-label="Cerrar modal">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
     <div class="modal-body">
-      <button class="btn-descarga todos" (click)="descargarExcelTodos(); cerrarModalDescarga()">
-        <i class="fas fa-users"></i> Todos los Inscriptos
+      <button 
+        class="btn-descarga todos" 
+        (click)="descargarExcelTodos(); cerrarModalDescarga()"
+        title="Descargar todos los inscriptos"
+      >
+        <i class="fas fa-users"></i> 
+        Todos los Inscriptos
       </button>
-      <button class="btn-descarga programa" (click)="descargarExcelPrograma(); cerrarModalDescarga()" [disabled]="!filtroProgramaId()">
-        <i class="fas fa-graduation-cap"></i> Programa Filtrado
+      <button 
+        class="btn-descarga programa" 
+        (click)="descargarExcelPrograma(); cerrarModalDescarga()" 
+        [disabled]="!filtroProgramaId()"
+        [title]="!filtroProgramaId() ? 'Selecciona un programa primero' : 'Descargar inscriptos del programa'"
+      >
+        <i class="fas fa-graduation-cap"></i> 
+        Programa Filtrado
       </button>
-      <button class="btn-descarga comision" (click)="descargarExcelComision(); cerrarModalDescarga()" [disabled]="!filtroComisionId()">
-        <i class="fas fa-user-friends"></i> Comisión Filtrada
+      <button 
+        class="btn-descarga comision" 
+        (click)="descargarExcelComision(); cerrarModalDescarga()" 
+        [disabled]="!filtroComisionId()"
+        [title]="!filtroComisionId() ? 'Selecciona una comisión primero' : 'Descargar inscriptos de la comisión'"
+      >
+        <i class="fas fa-users-cog"></i> 
+        Comisión Filtrada
       </button>
     </div>
+
   </div>
 </div>
 

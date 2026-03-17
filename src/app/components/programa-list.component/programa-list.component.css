@@ -1,6 +1,4 @@
-/* ==========================================
-   ADMIN CONTAINER - Layout Principal
-   ========================================== */
+
 .admin-container {
   max-width: 1400px;
   margin: 0 auto;
@@ -9,9 +7,6 @@
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
 }
 
-/* ==========================================
-   HEADER SECTION
-   ========================================== */
 .admin-header {
   display: flex;
   justify-content: space-between;
@@ -76,9 +71,6 @@
   font-size: 1.2rem;
 }
 
-/* ==========================================
-   FILTER SECTION
-   ========================================== */
 .filter-section {
   background: white;
   padding: 1.5rem;
@@ -184,9 +176,6 @@
   background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
 }
 
-/* ==========================================
-   LOADING STATE
-   ========================================== */
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -217,9 +206,6 @@
   font-size: 1rem;
 }
 
-/* ==========================================
-   ERROR STATE
-   ========================================== */
 .error-container {
   display: flex;
   flex-direction: column;
@@ -265,9 +251,6 @@
   color: white;
 }
 
-/* ==========================================
-   EMPTY STATE
-   ========================================== */
 .empty-container {
   display: flex;
   flex-direction: column;
@@ -299,9 +282,6 @@
   max-width: 500px;
 }
 
-/* ==========================================
-   PROGRAMS GRID
-   ========================================== */
 .programs-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -335,7 +315,6 @@
   border-color: #adb5bd;
 }
 
-/* Card Header */
 .card-header {
   padding: 1.5rem;
   border-bottom: 1px solid #f1f3f5;
@@ -385,7 +364,6 @@
   background: currentColor;
 }
 
-/* Card Body */
 .card-body {
   padding: 1.5rem;
   flex: 1;
@@ -430,7 +408,6 @@
   font-weight: 600;
 }
 
-/* Card Actions */
 .card-actions {
   display: flex;
   gap: 0.75rem;
@@ -494,9 +471,6 @@
   font-size: 1.1rem;
 }
 
-/* ==========================================
-   RESULTS FOOTER
-   ========================================== */
 .results-footer {
   text-align: center;
   padding: 1.5rem;
@@ -516,9 +490,6 @@
   font-weight: 700;
 }
 
-/* ==========================================
-   CONFIRMATION MODAL
-   ========================================== */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -710,9 +681,6 @@
   60%, 100% { content: '...'; }
 }
 
-/* ==========================================
-   RESPONSIVE DESIGN
-   ========================================== */
 @media (max-width: 1024px) {
   .programs-grid {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
