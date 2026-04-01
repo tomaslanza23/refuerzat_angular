@@ -24,7 +24,7 @@ export class LoginComponent {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      identifier: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
     });
   }
@@ -38,9 +38,9 @@ export class LoginComponent {
     this.loading = true;
     this.error = null;
 
-    const { identifier, password } = this.loginForm.value;
+    const { email, password } = this.loginForm.value;
 
-    this.authService.login(identifier, password).subscribe({
+    this.authService.login(email, password).subscribe({
       next: (response) => {
         this.loading = false;
         this.router.navigate(['/admin/programas']);
@@ -48,9 +48,9 @@ export class LoginComponent {
       error: (err) => {
         this.loading = false;
         if (err.status === 401 || err.status === 403) {
-          this.error = 'Usuario o contraseña incorrectos';
+          this.error = 'Email o contraseña incorrectos';
         } else if (err.status === 500) {
-          this.error = 'Usuario o contraseña incorrectos';
+          this.error = 'Email o contraseña incorrectos';
         } else if (err.status === 0) {
           this.error = 'No se pudo conectar con el servidor';
         } else {
@@ -72,7 +72,10 @@ export class LoginComponent {
   getErrorMessage(field: string): string {
     const control = this.loginForm.get(field);
     if (control?.errors?.['required']) {
-      return field === 'identifier' ? 'El usuario o email es obligatorio' : 'La contraseña es obligatoria';
+      return field === 'email' ? 'El email es obligatorio' : 'La contraseña es obligatoria';
+    }
+    if (control?.errors?.['email']) {
+      return 'El formato del email no es válido';
     }
     return '';
   }

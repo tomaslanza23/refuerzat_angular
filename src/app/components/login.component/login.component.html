@@ -16,19 +16,19 @@
 
       <div class="form-group">
         <label>
-          <i class="fas fa-user"></i>
-          Usuario o Email
+          <i class="fas fa-envelope"></i>
+          Email
         </label>
         <input
-          type="text"
-          formControlName="identifier"
-          placeholder="Ingresá tu usuario o email"
-          [class.input-error]="hasError('identifier')"
+          type="email"
+          formControlName="email"
+          placeholder="Ingresá tu email"
+          [class.input-error]="hasError('email')"
           autocomplete="username"
         />
-        <small class="error-text" *ngIf="hasError('identifier')">
+        <small class="error-text" *ngIf="hasError('email')">
           <i class="fas fa-exclamation-triangle"></i>
-          {{ getErrorMessage('identifier') }}
+          {{ getErrorMessage('email') }}
         </small>
       </div>
 

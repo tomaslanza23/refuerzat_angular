@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../environments/env';
 
 interface LoginRequest {
-  identifier: string;
+  email: string;
   password: string;
 }
 
@@ -41,8 +41,8 @@ export class AuthService {
     this.checkTokenExpiration();
   }
 
-  login(identifier: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.API_URL}/login`, { identifier, password })
+  login(email: string, password: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.API_URL}/login`, { email, password })
       .pipe(
         tap(response => {
           this.setSession(response);
