@@ -1,150 +1,181 @@
 <div class="admin-container">
+
   <div class="admin-header">
     <div class="header-content">
-      <h1><i class="fas fa-user-graduate"></i> Gestión de Inscriptos</h1>
-      <p>Administrá todos los inscriptos del sistema</p>
+      <h1 class="page-title">👥 Inscriptos</h1>
+      <p class="page-subtitle">Administrá todos los inscriptos del sistema</p>
     </div>
-    <button class="btn-excel" (click)="abrirModalDescarga()">
-      <i class="fas fa-file-excel"></i> Descargar Excel
+    <button class="btn-excel" (click)="mostrarModalDescarga = true">
+      📥 Descargar Excel
     </button>
   </div>
 
-  <div class="filters-section">
-    <div class="search-box">
-      <i class="fas fa-search"></i>
-      <input type="text" placeholder="Buscar por nombre, DNI, email..." [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
-    </div>
+  @if (!loading()) {
+    <div class="filter-section">
+      <div class="filter-top">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input"
+            placeholder="Buscar por nombre, DNI, email, programa..."
+            [ngModel]="searchTerm()"
+            (ngModelChange)="searchTerm.set($event)" />
+          @if (searchTerm()) {
+            <button class="clear-search" (click)="searchTerm.set('')">✕</button>
+          }
+        </div>
 
-    <div class="filter-row">
-      <div class="filter-group">
-        <label><i class="fas fa-graduation-cap"></i> Programa:</label>
-        <select [value]="filtroProgramaId() || ''" (change)="cambiarFiltroPrograma($any($event.target).value)">
+        <select class="filter-select"
+          [value]="filtroProgramaId() || ''"
+          (change)="cambiarFiltroPrograma($any($event.target).value)">
           <option value="">Todos los programas</option>
-          <option *ngFor="let programa of programas()" [value]="programa.idPrograma">{{ programa.nombre }}</option>
+          @for (p of programas(); track p.idPrograma) {
+            <option [value]="p.idPrograma">{{ p.nombre }}</option>
+          }
         </select>
-      </div>
 
-      <div class="filter-group">
-        <label><i class="fas fa-users"></i> Comisión:</label>
-        <select [value]="filtroComisionId() || ''" (change)="cambiarFiltroComision($any($event.target).value)">
+        <select class="filter-select"
+          [value]="filtroComisionId() || ''"
+          (change)="cambiarFiltroComision($any($event.target).value)">
           <option value="">Todas las comisiones</option>
-          <option *ngFor="let comision of comisiones()" [value]="comision.idComision">{{ comision.codigoComision }}</option>
+          @for (c of comisionesFiltradas(); track c.idComision) {
+            <option [value]="c.idComision">{{ c.codigoComision }}</option>
+          }
         </select>
       </div>
 
-      <div class="contador-badge">
-        <i class="fas fa-users"></i>
-        {{ contadores().filtrados }} de {{ contadores().total }} inscriptos
+      <div class="contador">
+        Mostrando <strong>{{ contadores().filtrados }}</strong> de <strong>{{ contadores().total }}</strong> inscriptos
+      </div>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p class="loading-text">Cargando inscriptos...</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error-container">
+      <h3 class="error-title">Error al cargar</h3>
+      <p class="error-message">{{ error() }}</p>
+      <button class="btn-secondary" (click)="cargarDatos()">🔄 Reintentar</button>
+    </div>
+  }
+
+  @if (!loading() && !error()) {
+    <div class="table-wrapper">
+      @if (inscriptosFiltrados().length === 0) {
+        <div class="empty-container">
+          <div class="empty-icon">📭</div>
+          <h3 class="empty-title">No hay inscriptos</h3>
+          <p class="empty-message">No se encontraron inscriptos con los filtros aplicados</p>
+        </div>
+      } @else {
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>Inscripto</th>
+              <th>DNI</th>
+              <th>Email</th>
+              <th>Programa</th>
+              <th>Comisión</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (i of inscriptosFiltrados(); track i.idInscripto) {
+              <tr>
+                <td class="td-nombre">
+                  <div class="nombre-avatar">{{ i.nombre.charAt(0) }}{{ i.apellido.charAt(0) }}</div>
+                  <div>
+                    <div class="nombre-completo">{{ i.nombre }} {{ i.apellido }}</div>
+                  </div>
+                </td>
+                <td class="td-mono">{{ i.dni }}</td>
+                <td class="td-email">{{ i.correoElectronico }}</td>
+                <td>
+                  <span class="badge badge-programa">{{ i.programaNombre }}</span>
+                </td>
+                <td>
+                  <span class="badge badge-comision">{{ i.comisionCodigo }}</span>
+                </td>
+                <td>
+                  <span class="badge-estado" [class.en-curso]="i.estadoFormacion === 'EN_CURSO'" [class.completada]="i.estadoFormacion === 'COMPLETADA'">
+                    {{ i.estadoFormacion === 'EN_CURSO' ? '🔵 En curso' : '✅ Completada' }}
+                  </span>
+                </td>
+                <td class="td-fecha">{{ formatearFecha(i.fechaInscripcion) }}</td>
+                <td class="td-acciones">
+                  <button class="btn-row btn-edit" (click)="editarInscripto(i.idInscripto)" title="Editar">✏️</button>
+                  <button class="btn-row btn-delete" (click)="confirmarEliminar(i)" title="Eliminar">🗑️</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  }
+
+</div>
+
+@if (inscriptoAEliminar) {
+  <div class="modal-overlay" (click)="cerrarModalEliminar()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-title">🗑️ Eliminar Inscripto</h3>
+        <button class="modal-close" (click)="cerrarModalEliminar()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-message">
+          ¿Eliminás a <strong>{{ inscriptoAEliminar.nombre }} {{ inscriptoAEliminar.apellido }}</strong>?
+          Esta acción no se puede deshacer y libera el cupo de la comisión.
+        </p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-modal btn-cancel" (click)="cerrarModalEliminar()">Cancelar</button>
+        <button class="btn-modal btn-confirm btn-confirm-danger" (click)="ejecutarEliminar()">Eliminar</button>
       </div>
     </div>
   </div>
+}
 
-  <div class="loading-state" *ngIf="loading()">
-    <i class="fas fa-spinner fa-spin"></i>
-    <p>Cargando inscriptos...</p>
-  </div>
-
-  <div class="error-state" *ngIf="error()">
-    <i class="fas fa-exclamation-triangle"></i>
-    <p>{{ error() }}</p>
-  </div>
-
-  <div class="table-container" *ngIf="!loading() && !error()">
-    <table class="inscriptos-table">
-      <thead>
-        <tr>
-          <th>Nombre Completo</th>
-          <th>DNI</th>
-          <th>Email</th>
-          <th>Programa</th>
-          <th>Comisión</th>
-          <th>Fecha Inscripción</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let inscripto of inscriptosFiltrados()">
-          <td class="nombre-cell">
-            <strong>{{ inscripto.nombre }} {{ inscripto.apellido }}</strong>
-          </td>
-          <td>{{ inscripto.dni }}</td>
-          <td class="email-cell">{{ inscripto.correoElectronico }}</td>
-          <td><span class="badge programa">{{ inscripto.programaNombre }}</span></td>
-          <td><span class="badge comision">{{ inscripto.comisionCodigo }}</span></td>
-          <td class="fecha-cell">{{ formatearFecha(inscripto.fechaInscripcion) }}</td>
-          <td class="acciones-cell">
-            <button class="btn-action edit" (click)="editarInscripto(inscripto.idInscripto)" title="Editar">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="btn-action delete" (click)="abrirModalEliminar(inscripto)" title="Eliminar">
-              <i class="fas fa-trash"></i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="empty-state" *ngIf="inscriptosFiltrados().length === 0">
-      <i class="fas fa-inbox"></i>
-      <h3>No hay inscriptos</h3>
-      <p>No se encontraron inscriptos con los filtros aplicados</p>
+@if (mostrarModalDescarga) {
+  <div class="modal-overlay" (click)="mostrarModalDescarga = false">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-title">📥 Exportar Excel</h3>
+        <button class="modal-close" (click)="mostrarModalDescarga = false">✕</button>
+      </div>
+      <div class="modal-body descarga-body">
+        <button class="btn-descarga" (click)="descargarTodos()">
+          <span class="descarga-icon">📋</span>
+          <div>
+            <div class="descarga-titulo">Todos los inscriptos</div>
+            <div class="descarga-sub">{{ contadores().total }} registros</div>
+          </div>
+        </button>
+        <button class="btn-descarga" (click)="descargarPrograma()" [disabled]="!filtroProgramaId()"
+          [title]="!filtroProgramaId() ? 'Seleccioná un programa primero' : ''">
+          <span class="descarga-icon">🏛️</span>
+          <div>
+            <div class="descarga-titulo">Por programa filtrado</div>
+            <div class="descarga-sub">{{ filtroProgramaId() ? 'Programa seleccionado' : 'Seleccioná un programa' }}</div>
+          </div>
+        </button>
+        <button class="btn-descarga" (click)="descargarComision()" [disabled]="!filtroComisionId()"
+          [title]="!filtroComisionId() ? 'Seleccioná una comisión primero' : ''">
+          <span class="descarga-icon">🏫</span>
+          <div>
+            <div class="descarga-titulo">Por comisión filtrada</div>
+            <div class="descarga-sub">{{ filtroComisionId() ? 'Comisión seleccionada' : 'Seleccioná una comisión' }}</div>
+          </div>
+        </button>
+      </div>
     </div>
   </div>
-</div>
-
-<div class="modal-overlay" *ngIf="mostrarModalDescarga" (click)="cerrarModalDescarga()">
-  <div class="modal-container" (click)="$event.stopPropagation()">
-    
-    <div class="modal-header">
-      <h3><i class="fas fa-file-download"></i> Descargar Excel</h3>
-      <button class="modal-close" (click)="cerrarModalDescarga()" aria-label="Cerrar modal">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    <div class="modal-body">
-      <button 
-        class="btn-descarga todos" 
-        (click)="descargarExcelTodos(); cerrarModalDescarga()"
-        title="Descargar todos los inscriptos"
-      >
-        <i class="fas fa-users"></i> 
-        Todos los Inscriptos
-      </button>
-      <button 
-        class="btn-descarga programa" 
-        (click)="descargarExcelPrograma(); cerrarModalDescarga()" 
-        [disabled]="!filtroProgramaId()"
-        [title]="!filtroProgramaId() ? 'Selecciona un programa primero' : 'Descargar inscriptos del programa'"
-      >
-        <i class="fas fa-graduation-cap"></i> 
-        Programa Filtrado
-      </button>
-      <button 
-        class="btn-descarga comision" 
-        (click)="descargarExcelComision(); cerrarModalDescarga()" 
-        [disabled]="!filtroComisionId()"
-        [title]="!filtroComisionId() ? 'Selecciona una comisión primero' : 'Descargar inscriptos de la comisión'"
-      >
-        <i class="fas fa-users-cog"></i> 
-        Comisión Filtrada
-      </button>
-    </div>
-
-  </div>
-</div>
-
-<div class="modal-overlay" *ngIf="mostrarModalEliminar" (click)="cerrarModalEliminar()">
-  <div class="modal-container" (click)="$event.stopPropagation()">
-    <div class="modal-header danger">
-      <h3><i class="fas fa-exclamation-triangle"></i> Confirmar Eliminación</h3>
-    </div>
-    <div class="modal-body">
-      <p>¿Estás seguro de que querés eliminar el inscripto <strong>{{ inscriptoAEliminar?.nombre }} {{ inscriptoAEliminar?.apellido }}</strong>?</p>
-      <p class="warning-text">Esta acción no se puede deshacer.</p>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" (click)="cerrarModalEliminar()"><i class="fas fa-times"></i> Cancelar</button>
-      <button class="btn-confirm" (click)="confirmarEliminar()"><i class="fas fa-check"></i> Eliminar</button>
-    </div>
-  </div>
-</div>
+}

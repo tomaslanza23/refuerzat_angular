@@ -448,3 +448,61 @@ h3:first-of-type {
     grid-template-columns: 1fr;
   }
 }
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.form-section-title {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 1.75rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1.5px solid #f3f4f6;
+}
+
+.form-section-title:first-of-type { margin-top: 0; }
+
+.estado-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.875rem;
+}
+
+.estado-banner.en-curso { background: #dbeafe; border: 1.5px solid #bfdbfe; }
+.estado-banner.completada { background: #d1fae5; border: 1.5px solid #a7f3d0; }
+
+.estado-info { display: flex; align-items: center; gap: 0.625rem; font-size: 0.9rem; }
+.estado-label { color: #6b7280; }
+.estado-info strong { color: #111827; }
+
+.btn-estado {
+  padding: 0.5rem 1.125rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-completar { background: #10b981; color: white; }
+.btn-completar:hover { background: #059669; }
+.btn-reactivar { background: #3b82f6; color: white; }
+.btn-reactivar:hover { background: #2563eb; }
+
+@media (max-width: 600px) {
+  .form-row { grid-template-columns: 1fr; }
+  .estado-banner { flex-direction: column; align-items: flex-start; }
+  .btn-estado { width: 100%; text-align: center; }
+}

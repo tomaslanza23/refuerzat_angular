@@ -19,6 +19,10 @@ export class ProgramaService {
     return this.http.get<Programa[]>(this.adminApi);
   }
 
+  getProgramaById(id: number) {
+    return this.http.get<Programa>(`${this.adminApi}/${id}`);
+  }
+
   crearPrograma(data: {
     nombre: string;
     descripcion?: string;
@@ -28,16 +32,13 @@ export class ProgramaService {
     return this.http.post<Programa>(this.adminApi, data);
   }
 
-  actualizarPrograma(
-    id: number,
-    data: {
-      nombre: string;
-      descripcion?: string;
-      tipoFormacion: 'TRONCAL' | 'COMPLEMENTARIA';
-      imagenUrl?: string;
-      activo: boolean;
-    }
-  ) {
+  actualizarPrograma(id: number, data: {
+    nombre: string;
+    descripcion?: string;
+    tipoFormacion: 'TRONCAL' | 'COMPLEMENTARIA';
+    imagenUrl?: string;
+    activo: boolean;
+  }) {
     return this.http.put<Programa>(`${this.adminApi}/${id}`, data);
   }
 }

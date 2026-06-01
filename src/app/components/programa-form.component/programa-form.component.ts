@@ -3,14 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators, FormGroup } from '@angular/forms';
 import { ProgramaService } from '../../services/programa.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Programa } from '../../models/programa.model';
 
 @Component({
   standalone: true,
   selector: 'app-programa-form',
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './programa-form.component.html',
-  styleUrls: ['./programa-form.component.css']
+  styleUrl: './programa-form.component.css'
 })
 export class ProgramaFormComponent implements OnInit {
 
@@ -48,20 +47,13 @@ export class ProgramaFormComponent implements OnInit {
 
   private cargarPrograma(id: number): void {
     this.cargando = true;
-    this.programaService.getAllProgramas().subscribe({
-      next: (programas) => {
-        const programa = programas.find(p => p.idPrograma === id);
-        if (!programa) {
-          this.error = 'Programa no encontrado';
-          this.cargando = false;
-          return;
-        }
-
+    this.programaService.getProgramaById(id).subscribe({
+      next: (programa) => {
         this.form.patchValue({
           nombre: programa.nombre,
-          descripcion: programa.descripcion,
+          descripcion: programa.descripcion ?? '',
           tipoFormacion: programa.tipoFormacion,
-          imagenUrl: programa.imagenUrl,
+          imagenUrl: programa.imagenUrl ?? '',
           activo: programa.activo
         });
         this.cargando = false;
@@ -73,21 +65,12 @@ export class ProgramaFormComponent implements OnInit {
     });
   }
 
-  cancelar(): void {
-    this.router.navigate(['/admin/programas']);
-  }
+  cancelar(): void { this.router.navigate(['/admin/programas']); }
 
   guardar(): void {
     this.error = undefined;
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-    if (this.esEdicion) {
-      this.actualizar();
-    } else {
-      this.crear();
-    }
+    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
+    this.esEdicion ? this.actualizar() : this.crear();
   }
 
   private crear(): void {
@@ -100,7 +83,7 @@ export class ProgramaFormComponent implements OnInit {
     }).subscribe({
       next: () => this.router.navigate(['/admin/programas']),
       error: err => {
-        this.error = err.error === 'nombre'
+        this.error = err.error?.field === 'nombre'
           ? 'Ya existe un programa con ese nombre'
           : 'Error al crear el programa';
       }
@@ -119,13 +102,10 @@ export class ProgramaFormComponent implements OnInit {
     }).subscribe({
       next: () => this.router.navigate(['/admin/programas']),
       error: err => {
-        if (err.error === 'nombre') {
-          this.error = 'Ya existe un programa con ese nombre';
-        } else if (err.error === 'activo') {
-          this.error = 'No se puede desactivar un programa con comisiones activas';
-        } else {
-          this.error = 'Error al actualizar el programa';
-        }
+        const field = err.error?.field;
+        if (field === 'nombre') this.error = 'Ya existe un programa con ese nombre';
+        else if (field === 'activo') this.error = 'No se puede desactivar un programa con comisiones activas';
+        else this.error = 'Error al actualizar el programa';
       }
     });
   }

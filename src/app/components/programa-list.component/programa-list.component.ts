@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { Programa } from '../../models/programa.model';
   selector: 'app-programa-list',
   imports: [CommonModule, FormsModule],
   templateUrl: './programa-list.component.html',
-  styleUrls: ['./programa-list.component.css']
+  styleUrl: './programa-list.component.css'
 })
 export class ProgramaListComponent implements OnInit {
   programas: Programa[] = [];
@@ -21,139 +21,85 @@ export class ProgramaListComponent implements OnInit {
   filtroEstado: 'todos' | 'activos' | 'inactivos' = 'todos';
   programaParaCambiar: Programa | null = null;
   procesandoCambio = false;
-mostrarModalConfirmacion = false;
-  constructor(
-    private programaService: ProgramaService,
-    private router: Router
-  ) {}
+
+  constructor(private programaService: ProgramaService, private router: Router) {}
 
   ngOnInit(): void {
     this.cargarProgramas();
   }
+
   cargarProgramas(): void {
     this.cargando = true;
     this.error = undefined;
-
     this.programaService.getAllProgramas().subscribe({
       next: (data) => {
         this.programas = data;
-        this.filtrarProgramas();
+        this.aplicarFiltros();
         this.cargando = false;
       },
-      error: (err) => {
-        console.error('Error al cargar programas:', err);
-        this.error = 'No se pudieron cargar los programas. Por favor, intenta nuevamente.';
+      error: () => {
+        this.error = 'No se pudieron cargar los programas. Por favor, intentá nuevamente.';
         this.cargando = false;
       }
     });
   }
 
-
-  filtrarProgramas(): void {
+  aplicarFiltros(): void {
     let resultado = [...this.programas];
     if (this.searchTerm.trim()) {
-      const termino = this.searchTerm.toLowerCase();
+      const t = this.searchTerm.toLowerCase();
       resultado = resultado.filter(p =>
-        p.nombre.toLowerCase().includes(termino) ||
-        (p.descripcion && p.descripcion.toLowerCase().includes(termino))
+        p.nombre.toLowerCase().includes(t) ||
+        (p.descripcion && p.descripcion.toLowerCase().includes(t))
       );
     }
-    if (this.filtroEstado === 'activos') {
-      resultado = resultado.filter(p => p.activo);
-    } else if (this.filtroEstado === 'inactivos') {
-      resultado = resultado.filter(p => !p.activo);
-    }
-
+    if (this.filtroEstado === 'activos') resultado = resultado.filter(p => p.activo);
+    if (this.filtroEstado === 'inactivos') resultado = resultado.filter(p => !p.activo);
     this.programasFiltrados = resultado;
   }
 
   limpiarBusqueda(): void {
     this.searchTerm = '';
-    this.filtrarProgramas();
+    this.aplicarFiltros();
   }
 
   cambiarFiltro(estado: 'todos' | 'activos' | 'inactivos'): void {
     this.filtroEstado = estado;
-    this.filtrarProgramas();
+    this.aplicarFiltros();
   }
 
-  contarActivos(): number {
-    return this.programas.filter(p => p.activo).length;
-  }
+  contarActivos(): number { return this.programas.filter(p => p.activo).length; }
+  contarInactivos(): number { return this.programas.filter(p => !p.activo).length; }
 
-  contarInactivos(): number {
-    return this.programas.filter(p => !p.activo).length;
-  }
+  irANuevo(): void { this.router.navigate(['/admin/programas/nuevo']); }
+  editar(programa: Programa): void { this.router.navigate(['/admin/programas/editar', programa.idPrograma]); }
 
-  irANuevo(): void {
-    this.router.navigate(['/admin/programas/nuevo']);
-  }
-  editar(programa: Programa): void {
-    this.router.navigate(['/admin/programas/editar', programa.idPrograma]);
-  }
-
-  confirmarCambioEstado(programa: Programa): void {
-    this.programaParaCambiar = programa;
-  }
+  confirmarCambioEstado(programa: Programa): void { this.programaParaCambiar = programa; }
 
   cancelarCambioEstado(): void {
     this.programaParaCambiar = null;
     this.procesandoCambio = false;
   }
 
-ejecutarCambioEstado(): void {
+  ejecutarCambioEstado(): void {
     if (!this.programaParaCambiar) return;
     const programa = this.programaParaCambiar;
-    const nuevoEstado = !programa.activo;
+    this.procesandoCambio = true;
 
     this.programaService.actualizarPrograma(programa.idPrograma, {
-        nombre: programa.nombre,
-        descripcion: programa.descripcion,
-        tipoFormacion: programa.tipoFormacion,
-        imagenUrl: programa.imagenUrl,
-        activo: nuevoEstado
+      nombre: programa.nombre,
+      descripcion: programa.descripcion,
+      tipoFormacion: programa.tipoFormacion,
+      imagenUrl: programa.imagenUrl,
+      activo: !programa.activo
     }).subscribe({
-        next: () => {
-            this.cargarProgramas(); // unificá con cargarDatos(), son lo mismo
-            this.cerrarModal();
-        },
-        error: () => {
-            alert('Error al cambiar el estado del programa');
-            this.cerrarModal();
-        }
-    });
-}
-
-  private mostrarNotificacion(mensaje: string, tipo: 'success' | 'error'): void {
-    if (tipo === 'error') {
-      alert(' ' + mensaje);
-    } else {
-      console.log(' ' + mensaje);
-    }
-  }
- abrirModalCambioEstado(programa: Programa): void {
-    this.programaParaCambiar = programa;
-    this.mostrarModalConfirmacion = true;
-  }
-
-  cerrarModal(): void {
-    this.mostrarModalConfirmacion = false;
-    this.programaParaCambiar = null;
-  }
-  cambiarEstado(programa: Programa): void {
-    this.confirmarCambioEstado(programa);
-  }
-    cargarDatos(): void {
-      this.cargando= true;
-      this.error = undefined;
-      this.programaService.getAllProgramas().subscribe({
-      next: (programas) => {
-        this.programas = programas;
-        this.cargando =false;
+      next: () => {
+        this.cargarProgramas();
+        this.cancelarCambioEstado();
       },
       error: () => {
-        this.error ='Error al cargar los programas';
-        this.cargando =false;
+        alert('Error al cambiar el estado del programa');
+        this.cancelarCambioEstado();
       }
     });
   }

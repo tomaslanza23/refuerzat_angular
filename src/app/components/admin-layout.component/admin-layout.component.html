@@ -1,0 +1,39 @@
+<div class="admin-shell">
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="brand-icon">🎓</span>
+      <span class="brand-name">RefuerzaT</span>
+      <span class="brand-sep">|</span>
+      <span class="brand-sub">Admin</span>
+    </div>
+
+    <nav class="topbar-nav">
+      <a routerLink="/admin/programas" routerLinkActive="nav-activo"
+         [routerLinkActiveOptions]="{exact: false}" class="nav-item">
+        📋 Programas
+      </a>
+      <a routerLink="/admin/comisiones" routerLinkActive="nav-activo"
+         [routerLinkActiveOptions]="{exact: false}" class="nav-item">
+        🏫 Comisiones
+      </a>
+      <a routerLink="/admin/inscriptos" routerLinkActive="nav-activo"
+         [routerLinkActiveOptions]="{exact: false}" class="nav-item">
+        👥 Inscriptos
+      </a>
+    </nav>
+
+    <div class="topbar-right">
+      <div class="user-chip">
+        <span class="user-avatar">{{ inicialUsuario }}</span>
+        <span class="user-name">{{ usuario?.nombre }}</span>
+      </div>
+      <button class="btn-logout" (click)="logout()">🚪 Salir</button>
+    </div>
+  </header>
+
+  <main class="admin-content">
+    <router-outlet />
+  </main>
+
+</div>

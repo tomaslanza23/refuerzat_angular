@@ -2,8 +2,7 @@
   <div class="admin-header">
     <div class="header-content">
       <h1 class="page-title">
-        <i class="fas fa-graduation-cap"></i>
-        {{ esEdicion ? 'Editar Programa' : 'Nuevo Programa' }}
+        {{ esEdicion ? '✏️ Editar Programa' : '➕ Nuevo Programa' }}
       </h1>
       <p class="page-subtitle">
         {{ esEdicion ? 'Modificá los datos del programa de formación' : 'Creá un nuevo programa de formación' }}
@@ -11,147 +10,83 @@
     </div>
   </div>
 
-  <div class="form-card">
-    <form [formGroup]="form" (ngSubmit)="guardar()">
+  @if (cargando) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p class="loading-text">Cargando datos...</p>
+    </div>
+  }
 
-      <div class="form-group">
-        <label class="form-label">
-          <i class="fas fa-tag"></i>
-          Nombre del programa <span class="required">*</span>
-        </label>
-        <input 
-          type="text" 
-          class="form-input" 
-          formControlName="nombre" 
-          placeholder="Ej: Marketing Digital" 
-        />
-        <div class="form-error" *ngIf="form.get('nombre')?.touched && form.get('nombre')?.invalid">
-          <i class="fas fa-exclamation-circle"></i>
-          El nombre es obligatorio
+  @if (!cargando) {
+    <div class="form-card">
+      <form [formGroup]="form" (ngSubmit)="guardar()">
+
+        <div class="form-group">
+          <label class="form-label">Nombre del programa <span class="required">*</span></label>
+          <input type="text" class="form-input" formControlName="nombre" placeholder="Ej: Marketing Digital" />
+          @if (form.get('nombre')?.touched && form.get('nombre')?.invalid) {
+            <div class="form-error">El nombre es obligatorio</div>
+          }
         </div>
-      </div>
 
-      <div class="form-group">
-        <label class="form-label">
-          <i class="fas fa-align-left"></i>
-          Descripción
-        </label>
-        <textarea 
-          class="form-textarea" 
-          rows="4" 
-          formControlName="descripcion" 
-          placeholder="Descripción del programa (opcional)"
-        ></textarea>
-        <small class="form-hint">
-          <i class="fas fa-info-circle"></i>
-          Descripción que se mostrará en el modal de selección de programas
-        </small>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">
-          <i class="fas fa-layer-group"></i>
-          Tipo de Formación <span class="required">*</span>
-        </label>
-        <select class="form-input" formControlName="tipoFormacion">
-          <option value="">Seleccioná un tipo</option>
-          <option value="TRONCAL">TRONCAL - Formación Base</option>
-          <option value="COMPLEMENTARIA">COMPLEMENTARIA - Jornada (requiere TRONCAL previa)</option>
-        </select>
-        <small class="form-hint">
-          <i class="fas fa-info-circle"></i>
-          <strong>TRONCAL:</strong> Formación principal que todos pueden cursar.<br>
-          <strong>COMPLEMENTARIA:</strong> Solo pueden inscribirse quienes ya están cursando o completaron una TRONCAL.
-        </small>
-        <div class="form-error" *ngIf="form.get('tipoFormacion')?.touched && form.get('tipoFormacion')?.invalid">
-          <i class="fas fa-exclamation-circle"></i>
-          El tipo de formación es obligatorio
+        <div class="form-group">
+          <label class="form-label">Descripción</label>
+          <textarea class="form-textarea" rows="4" formControlName="descripcion"
+            placeholder="Descripción del programa (opcional)"></textarea>
+          <small class="form-hint">Se mostrará en el modal de selección de programas del formulario público</small>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label class="form-label">
-          <i class="fas fa-image"></i>
-          URL de la imagen
-        </label>
-        <input 
-          type="text" 
-          class="form-input" 
-          formControlName="imagenUrl" 
-          placeholder="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80" 
-        />
-        <small class="form-hint">
-          <i class="fas fa-info-circle"></i>
-          URL de la imagen que se mostrará en el modal de inscripción (opcional).
-          <br>
-          <strong>Ejemplos:</strong>
-          <ul class="hint-list">
-            <li>URL externa: <code>https://images.unsplash.com/photo-123?w=800&q=80</code></li>
-            <li>Ruta local: <code>assets/imagenes/programas/marketing.jpg</code></li>
-          </ul>
-          Si no se especifica, se usará una imagen por defecto.
-        </small>
-        
-        <div class="image-preview" *ngIf="form.get('imagenUrl')?.value">
-          <p class="preview-label">
-            <i class="fas fa-eye"></i> Vista previa:
-          </p>
-          <img 
-            [src]="form.get('imagenUrl')?.value" 
-            alt="Preview" 
-            class="preview-img" 
-            (error)="$any($event.target).style.display='none'" 
-          />
+        <div class="form-group">
+          <label class="form-label">Tipo de Formación <span class="required">*</span></label>
+          <select class="form-input" formControlName="tipoFormacion">
+            <option value="">Seleccioná un tipo</option>
+            <option value="TRONCAL">🏛 TRONCAL — Formación Base</option>
+            <option value="COMPLEMENTARIA">🔗 COMPLEMENTARIA — Jornada (requiere TRONCAL previa)</option>
+          </select>
+          @if (form.get('tipoFormacion')?.touched && form.get('tipoFormacion')?.invalid) {
+            <div class="form-error">El tipo de formación es obligatorio</div>
+          }
         </div>
-      </div>
 
-      <div class="form-group" *ngIf="esEdicion">
-        <label class="status-toggle">
-          <input type="checkbox" formControlName="activo" />
-          <span class="toggle-ui"></span>
-          <span class="toggle-label">
-            <i class="fas" 
-               [class.fa-check-circle]="form.get('activo')?.value" 
-               [class.fa-times-circle]="!form.get('activo')?.value">
-            </i>
-            {{ form.get('activo')?.value ? 'Programa activo' : 'Programa inactivo' }}
-          </span>
-        </label>
-        <small class="form-hint">
-          <i class="fas fa-info-circle"></i>
-          Los programas inactivos no se muestran en el formulario público de inscripción
-        </small>
-      </div>
+        <div class="form-group">
+          <label class="form-label">URL de imagen</label>
+          <input type="text" class="form-input" formControlName="imagenUrl"
+            placeholder="https://... o assets/imagenes/programa.jpg" />
+          <small class="form-hint">Imagen que se mostrará en el formulario público (opcional)</small>
+          @if (form.get('imagenUrl')?.value) {
+            <div class="image-preview">
+              <p class="preview-label">Vista previa:</p>
+              <img [src]="form.get('imagenUrl')?.value" alt="Preview" class="preview-img"
+                (error)="$any($event.target).style.display='none'" />
+            </div>
+          }
+        </div>
 
-      <div class="form-error-global" *ngIf="error">
-        <i class="fas fa-exclamation-triangle"></i>
-        {{ error }}
-      </div>
+        @if (esEdicion) {
+          <div class="form-group">
+            <label class="status-toggle">
+              <input type="checkbox" formControlName="activo" />
+              <span class="toggle-ui"></span>
+              <span class="toggle-label">
+                {{ form.get('activo')?.value ? '✅ Programa activo' : '🔴 Programa inactivo' }}
+              </span>
+            </label>
+            <small class="form-hint">Los programas inactivos no se muestran en el formulario público</small>
+          </div>
+        }
 
-      <div class="form-actions">
-        <button 
-          type="button" 
-          class="btn-secondary" 
-          (click)="cancelar()"
-        >
-          <i class="fas fa-times"></i>
-          Cancelar
-        </button>
+        @if (error) {
+          <div class="form-error-global">⚠️ {{ error }}</div>
+        }
 
-        <button 
-          type="submit" 
-          class="btn-primary" 
-          [disabled]="cargando"
-        >
-          <i class="fas" 
-             [class.fa-save]="!cargando" 
-             [class.fa-spinner]="cargando" 
-             [class.fa-spin]="cargando">
-          </i>
-          {{ esEdicion ? 'Guardar cambios' : 'Crear programa' }}
-        </button>
-      </div>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="cancelar()">Cancelar</button>
+          <button type="submit" class="btn-primary" [disabled]="cargando">
+            {{ esEdicion ? '💾 Guardar cambios' : '✅ Crear programa' }}
+          </button>
+        </div>
 
-    </form>
-  </div>
+      </form>
+    </div>
+  }
 </div>

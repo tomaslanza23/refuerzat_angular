@@ -17,11 +17,11 @@ export class InscripcionService {
     return this.http.post(this.api, request);
   }
 
-  getAllInscriptos() {
+  getAllInscriptos(): Observable<Inscripto[]> {
     return this.http.get<Inscripto[]>(this.adminApi);
   }
 
-  getInscripto(id: number) {
+  getInscripto(id: number): Observable<Inscripto> {
     return this.http.get<Inscripto>(`${this.adminApi}/${id}`);
   }
 
@@ -35,30 +35,35 @@ export class InscripcionService {
     etapaEmprendimiento: string;
     sectorEmprendimiento: string;
     nombreEmprendimiento?: string;
-    comisionId: number;
-  }) {
+  }): Observable<Inscripto> {
     return this.http.put<Inscripto>(`${this.adminApi}/${id}`, data);
   }
 
-  eliminarInscripto(id: number) {
-    return this.http.delete(`${this.adminApi}/${id}`);
+  cambiarComision(id: number, nuevaComisionId: number): Observable<Inscripto> {
+    return this.http.patch<Inscripto>(`${this.adminApi}/${id}/cambiar-comision`, { nuevaComisionId });
+  }
+
+  completarFormacion(id: number): Observable<Inscripto> {
+    return this.http.patch<Inscripto>(`${this.adminApi}/${id}/completar`, {});
+  }
+
+  reactivarFormacion(id: number): Observable<Inscripto> {
+    return this.http.patch<Inscripto>(`${this.adminApi}/${id}/reactivar`, {});
+  }
+
+  eliminarInscripto(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.adminApi}/${id}`);
   }
 
   exportarTodos(): Observable<Blob> {
-    return this.http.get(`${this.adminApi}/excel/todos`, {
-      responseType: 'blob'
-    });
+    return this.http.get(`${this.adminApi}/excel/todos`, { responseType: 'blob' });
   }
 
   exportarPorPrograma(programaId: number): Observable<Blob> {
-    return this.http.get(`${this.adminApi}/excel/programa/${programaId}`, {
-      responseType: 'blob'
-    });
+    return this.http.get(`${this.adminApi}/excel/programa/${programaId}`, { responseType: 'blob' });
   }
 
   exportarPorComision(comisionId: number): Observable<Blob> {
-    return this.http.get(`${this.adminApi}/excel/comision/${comisionId}`, {
-      responseType: 'blob'
-    });
+    return this.http.get(`${this.adminApi}/excel/comision/${comisionId}`, { responseType: 'blob' });
   }
 }

@@ -1,7 +1,8 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, signal, computed, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { InscripcionService } from '../../services/inscripcion.service';
 import { ProgramaService } from '../../services/programa.service';
 import { ComisionService } from '../../services/comision.service';
@@ -14,14 +15,13 @@ import { Comision } from '../../models/comision.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './inscriptos-list.component.html',
-  styleUrls: ['./inscriptos-list.component.css']
+  styleUrl: './inscriptos-list.component.css'
 })
 export class InscriptosListComponent implements OnInit {
 
   inscriptos = signal<Inscripto[]>([]);
   programas = signal<Programa[]>([]);
   comisiones = signal<Comision[]>([]);
-
   loading = signal(true);
   error = signal<string | null>(null);
 
@@ -29,9 +29,8 @@ export class InscriptosListComponent implements OnInit {
   filtroProgramaId = signal<number | null>(null);
   filtroComisionId = signal<number | null>(null);
 
-  mostrarModalDescarga = false;
-  mostrarModalEliminar = false;
   inscriptoAEliminar: Inscripto | null = null;
+  mostrarModalDescarga = false;
 
   inscriptosFiltrados = computed(() => {
     let resultado = this.inscriptos();
@@ -39,24 +38,28 @@ export class InscriptosListComponent implements OnInit {
     if (this.filtroProgramaId()) {
       resultado = resultado.filter(i => i.programaId === this.filtroProgramaId());
     }
-
     if (this.filtroComisionId()) {
       resultado = resultado.filter(i => i.comisionId === this.filtroComisionId());
     }
 
-    const termino = this.searchTerm().toLowerCase().trim();
-    if (termino) {
+    const t = this.searchTerm().toLowerCase().trim();
+    if (t) {
       resultado = resultado.filter(i =>
-        i.nombre.toLowerCase().includes(termino) ||
-        i.apellido.toLowerCase().includes(termino) ||
-        i.dni.includes(termino) ||
-        i.correoElectronico.toLowerCase().includes(termino) ||
-        i.programaNombre?.toLowerCase().includes(termino) ||
-        i.comisionCodigo?.toLowerCase().includes(termino)
+        i.nombre.toLowerCase().includes(t) ||
+        i.apellido.toLowerCase().includes(t) ||
+        i.dni.includes(t) ||
+        i.correoElectronico.toLowerCase().includes(t) ||
+        i.programaNombre?.toLowerCase().includes(t) ||
+        i.comisionCodigo?.toLowerCase().includes(t)
       );
     }
-
     return resultado;
+  });
+
+  comisionesFiltradas = computed(() => {
+    const pid = this.filtroProgramaId();
+    if (!pid) return this.comisiones();
+    return this.comisiones().filter(c => c.programaId === pid);
   });
 
   contadores = computed(() => ({
@@ -68,7 +71,8 @@ export class InscriptosListComponent implements OnInit {
     private inscripcionService: InscripcionService,
     private programaService: ProgramaService,
     private comisionService: ComisionService,
-    private router: Router
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
@@ -79,24 +83,27 @@ export class InscriptosListComponent implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
-    Promise.all([
-      this.inscripcionService.getAllInscriptos().toPromise(),
-      this.programaService.getAllProgramas().toPromise(),
-      this.comisionService.getAllComisiones().toPromise()
-    ]).then(([inscriptos, programas, comisiones]) => {
-      this.inscriptos.set((inscriptos as Inscripto[]) || []);
-      this.programas.set((programas as Programa[]) || []);
-      this.comisiones.set((comisiones as Comision[]) || []);
-      this.loading.set(false);
-    }).catch(() => {
-      this.error.set('Error al cargar los datos');
-      this.loading.set(false);
+    forkJoin({
+      inscriptos: this.inscripcionService.getAllInscriptos(),
+      programas: this.programaService.getAllProgramas(),
+      comisiones: this.comisionService.getAllComisiones()
+    }).subscribe({
+      next: ({ inscriptos, programas, comisiones }) => {
+        this.inscriptos.set(inscriptos);
+        this.programas.set(programas);
+        this.comisiones.set(comisiones);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('Error al cargar los datos');
+        this.loading.set(false);
+      }
     });
   }
 
   cambiarFiltroPrograma(programaId: string): void {
     this.filtroProgramaId.set(programaId ? Number(programaId) : null);
-    this.filtroComisionId.set(null); 
+    this.filtroComisionId.set(null);
   }
 
   cambiarFiltroComision(comisionId: string): void {
@@ -107,104 +114,57 @@ export class InscriptosListComponent implements OnInit {
     this.router.navigate([`/admin/inscriptos/editar/${id}`]);
   }
 
-  abrirModalEliminar(inscripto: Inscripto): void {
-    this.inscriptoAEliminar = inscripto;
-    this.mostrarModalEliminar = true;
-  }
+  confirmarEliminar(inscripto: Inscripto): void { this.inscriptoAEliminar = inscripto; }
+  cerrarModalEliminar(): void { this.inscriptoAEliminar = null; }
 
-  cerrarModalEliminar(): void {
-    this.mostrarModalEliminar = false;
-    this.inscriptoAEliminar = null;
-  }
-
-  confirmarEliminar(): void {
+  ejecutarEliminar(): void {
     if (!this.inscriptoAEliminar) return;
-
     this.inscripcionService.eliminarInscripto(this.inscriptoAEliminar.idInscripto).subscribe({
-      next: () => {
-        this.cargarDatos();
-        this.cerrarModalEliminar();
-      },
-      error: () => {
-        alert('Error al eliminar el inscripto');
-        this.cerrarModalEliminar();
-      }
+      next: () => { this.cargarDatos(); this.cerrarModalEliminar(); },
+      error: () => { alert('Error al eliminar el inscripto'); this.cerrarModalEliminar(); }
     });
   }
 
-  abrirModalDescarga(): void {
-    this.mostrarModalDescarga = true;
+  private descargarBlob(blob: Blob, nombre: string): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nombre;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 
-  cerrarModalDescarga(): void {
+  descargarTodos(): void {
+    this.inscripcionService.exportarTodos().subscribe({
+      next: (blob) => this.descargarBlob(blob, `inscriptos_todos_${Date.now()}.xlsx`),
+      error: () => alert('Error al descargar')
+    });
     this.mostrarModalDescarga = false;
   }
 
-  descargarExcelTodos(): void {
-  this.inscripcionService.exportarTodos().subscribe({
-    next: (blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `inscriptos_todos_${new Date().getTime()}.xlsx`;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    },
-    error: (err) => {
-      console.error('Error al exportar:', err);
-      alert('Error al descargar el archivo Excel');
-    }
-  });
-}
-
-descargarExcelPrograma(): void {
-  if (this.filtroProgramaId()) {
+  descargarPrograma(): void {
+    if (!this.filtroProgramaId()) return;
     this.inscripcionService.exportarPorPrograma(this.filtroProgramaId()!).subscribe({
-      next: (blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `inscriptos_programa_${this.filtroProgramaId()}_${new Date().getTime()}.xlsx`;
-        a.click();
-        window.URL.revokeObjectURL(url);
-      },
-      error: (err) => {
-        console.error('Error al exportar:', err);
-        alert('Error al descargar el archivo Excel');
-      }
+      next: (blob) => this.descargarBlob(blob, `inscriptos_programa_${this.filtroProgramaId()}_${Date.now()}.xlsx`),
+      error: () => alert('Error al descargar')
     });
+    this.mostrarModalDescarga = false;
   }
-}
 
-descargarExcelComision(): void {
-  if (this.filtroComisionId()) {
+  descargarComision(): void {
+    if (!this.filtroComisionId()) return;
     this.inscripcionService.exportarPorComision(this.filtroComisionId()!).subscribe({
-      next: (blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `inscriptos_comision_${this.filtroComisionId()}_${new Date().getTime()}.xlsx`;
-        a.click();
-        window.URL.revokeObjectURL(url);
-      },
-      error: (err) => {
-        console.error('Error al exportar:', err);
-        alert('Error al descargar el archivo Excel');
-      }
+      next: (blob) => this.descargarBlob(blob, `inscriptos_comision_${this.filtroComisionId()}_${Date.now()}.xlsx`),
+      error: () => alert('Error al descargar')
     });
+    this.mostrarModalDescarga = false;
   }
-}
 
   formatearFecha(fecha: string): string {
-    const date = new Date(fecha);
-    return date.toLocaleDateString('es-AR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(fecha).toLocaleDateString('es-AR', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
     });
   }
-
-
 }

@@ -1,6 +1,12 @@
   //----produccion----
 
-      export const environment = {
+      // export const environment = {
+      //   production: false,
+      //   apiUrl: '/refuerzate/api',
+      //   };
+
+        export const environment = {
         production: false,
-        apiUrl: '/refuerzate/api',
+        apiUrl: 'http://localhost:8080/',
         };
+

@@ -1,207 +1,195 @@
 <div class="admin-container">
+
   <div class="admin-header">
     <div class="header-content">
-      <h1 class="page-title">
-        <i class="fas fa-users"></i>
-        Gestión de Comisiones
-      </h1>
-      <p class="page-subtitle">
-        Administrá las comisiones de los programas RefuerzaT
-      </p>
+      <h1 class="page-title">🏫 Comisiones</h1>
+      <p class="page-subtitle">Administrá las comisiones de los programas RefuerzaT</p>
     </div>
-    <button class="btn-nuevo" (click)="nuevaComision()">
-      <i class="fas fa-plus"></i>
-      Nueva Comisión
-    </button>
+    <button class="btn-primary" (click)="nuevaComision()">➕ Nueva Comisión</button>
   </div>
 
-  <div class="filters-section">
-    <div class="search-box">
-      <i class="fas fa-search"></i>
-      <input
-        type="text"
-        placeholder="Buscar por código, programa, días, horario..."
-        [ngModel]="searchTerm()"
-        (ngModelChange)="searchTerm.set($event)"
-      />
-    </div>
-
-    <div class="filter-group">
-      <label class="filter-label">
-        <i class="fas fa-graduation-cap"></i>
-        Programa:
-      </label>
-      <select
-        class="filter-select"
-        [value]="filtroProgramaId() || ''"
-        (change)="cambiarFiltroPrograma($any($event.target).value)"
-      >
-        <option value="">Todos los programas</option>
-        <option *ngFor="let programa of programas()" [value]="programa.idPrograma">
-          {{ programa.nombre }}
-        </option>
-      </select>
-    </div>
-
-    <div class="filter-tabs">
-      <button
-        class="filter-tab"
-        [class.active]="filtroActivo() === 'todas'"
-        (click)="cambiarFiltro('todas')"
-      >
-        Todas
-        <span class="count">{{ contadores().todas }}</span>
-      </button>
-      <button
-        class="filter-tab"
-        [class.active]="filtroActivo() === 'activas'"
-        (click)="cambiarFiltro('activas')"
-      >
-        Activas
-        <span class="count activas">{{ contadores().activas }}</span>
-      </button>
-      <button
-        class="filter-tab"
-        [class.active]="filtroActivo() === 'inactivas'"
-        (click)="cambiarFiltro('inactivas')"
-      >
-        Inactivas
-        <span class="count inactivas">{{ contadores().inactivas }}</span>
-      </button>
-    </div>
-  </div>
-
-  <div class="loading-state" *ngIf="loading()">
-    <i class="fas fa-spinner fa-spin"></i>
-    <p>Cargando comisiones...</p>
-  </div>
-
-  <div class="error-state" *ngIf="error()">
-    <i class="fas fa-exclamation-triangle"></i>
-    <p>{{ error() }}</p>
-    <button class="btn-retry" (click)="cargarDatos()">
-      <i class="fas fa-redo"></i>
-      Reintentar
-    </button>
-  </div>
-
-  <div class="comisiones-grid" *ngIf="!loading() && !error()">
-    <div
-      class="comision-card"
-      *ngFor="let comision of comisionesFiltradas()"
-      [class.inactiva]="!comision.activa"
-    >
-      <div class="card-header">
-        <div class="header-left">
-          <h3 class="comision-codigo">{{ comision.codigoComision }}</h3>
-          <span class="programa-badge">
-            <i class="fas fa-graduation-cap"></i>
-            {{ comision.programaNombre }}
-          </span>
+  @if (!loading()) {
+    <div class="filter-section">
+      <div class="filter-top">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input"
+            placeholder="Buscar por código, programa, días, lugar..."
+            [ngModel]="searchTerm()"
+            (ngModelChange)="searchTerm.set($event)" />
+          @if (searchTerm()) {
+            <button class="clear-search" (click)="searchTerm.set('')">✕</button>
+          }
         </div>
-        <div class="header-right">
-          <span
-            class="status-badge"
-            [class.activa]="comision.activa"
-            [class.inactiva]="!comision.activa"
-          >
-            <i class="fas" [class.fa-check-circle]="comision.activa" [class.fa-times-circle]="!comision.activa"></i>
-            {{ comision.activa ? 'Activa' : 'Inactiva' }}
-          </span>
+
+        <div class="select-wrapper">
+          <select class="filter-select"
+            [value]="filtroProgramaId() || ''"
+            (change)="cambiarFiltroPrograma($any($event.target).value)">
+            <option value="">Todos los programas</option>
+            @for (programa of programas(); track programa.idPrograma) {
+              <option [value]="programa.idPrograma">{{ programa.nombre }}</option>
+            }
+          </select>
         </div>
       </div>
 
-      <div class="card-body">
-        <div class="info-row">
-          <i class="fas fa-calendar-alt"></i>
-          <span><strong>Días:</strong> {{ comision.dias }}</span>
-        </div>
-        <div class="info-row">
-          <i class="fas fa-clock"></i>
-          <span><strong>Horario:</strong> {{ comision.horario }}</span>
-        </div>
-        <div class="info-row">
-          <i class="fas fa-map-marker-alt"></i>
-          <span><strong>Lugar:</strong> {{ comision.lugar }}</span>
-        </div>
-        <div class="info-row">
-          <i class="fas fa-tag"></i>
-          <span><strong>Turno:</strong> {{ comision.turno }}</span>
-        </div>
-
-        <div class="cupos-section">
-          <div class="cupos-header">
-            <span class="cupos-label">
-              <i class="fas fa-users"></i>
-              Cupos
-            </span>
-            <span class="cupos-numeros">
-              {{ comision.cuposOcupados }} / {{ comision.cupoTotal }}
-            </span>
-          </div>
-          <div class="cupos-barra">
-            <div
-              class="cupos-progreso"
-              [class]="getClaseCupo(comision)"
-              [style.width.%]="getPorcentajeCupo(comision)"
-            ></div>
-          </div>
-          <span class="cupos-disponibles" [class.completo]="comision.cuposDisponibles === 0">
-            {{ comision.cuposDisponibles }} disponibles
-          </span>
-        </div>
-      </div>
-
-      <div class="card-actions">
-        <button
-          class="btn-action btn-edit"
-          (click)="editarComision(comision.idComision)"
-        >
-          <i class="fas fa-edit"></i>
-          Editar
+      <div class="filter-buttons">
+        <button class="filter-btn" [class.active]="filtroActivo() === 'todas'" (click)="cambiarFiltro('todas')">
+          Todas ({{ contadores().todas }})
         </button>
-        <button
-          class="btn-action btn-toggle"
-          (click)="abrirModalCambioEstado(comision)"
-          [disabled]="!comision.activa && comision.cuposOcupados > 0"
-        >
-          <i class="fas" [class.fa-toggle-on]="comision.activa" [class.fa-toggle-off]="!comision.activa"></i>
-          {{ comision.activa ? 'Desactivar' : 'Activar' }}
+        <button class="filter-btn filter-activos" [class.active]="filtroActivo() === 'activas'" (click)="cambiarFiltro('activas')">
+          Activas ({{ contadores().activas }})
+        </button>
+        <button class="filter-btn filter-inactivos" [class.active]="filtroActivo() === 'inactivas'" (click)="cambiarFiltro('inactivas')">
+          Inactivas ({{ contadores().inactivas }})
         </button>
       </div>
     </div>
+  }
 
-    <div class="empty-state" *ngIf="comisionesFiltradas().length === 0">
-      <i class="fas fa-inbox"></i>
-      <h3>No hay comisiones</h3>
-      <p>No se encontraron comisiones con los filtros aplicados</p>
+  @if (loading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p class="loading-text">Cargando comisiones...</p>
     </div>
-  </div>
+  }
+
+  @if (error()) {
+    <div class="error-container">
+      <h3 class="error-title">Error al cargar</h3>
+      <p class="error-message">{{ error() }}</p>
+      <button class="btn-secondary" (click)="cargarDatos()">🔄 Reintentar</button>
+    </div>
+  }
+
+  @if (!loading() && !error()) {
+    @if (comisionesFiltradas().length === 0) {
+      <div class="empty-container">
+        <div class="empty-icon">📭</div>
+        <h3 class="empty-title">No hay comisiones</h3>
+        <p class="empty-message">No se encontraron comisiones con los filtros aplicados</p>
+      </div>
+    } @else {
+      <div class="comisiones-grid">
+        @for (comision of comisionesFiltradas(); track comision.idComision) {
+          <div class="comision-card" [class.inactiva]="!comision.activa">
+
+            <div class="card-header">
+              <div class="card-header-top">
+                <h3 class="comision-codigo">{{ comision.codigoComision }}</h3>
+                <span class="status-badge" [class.status-active]="comision.activa" [class.status-inactive]="!comision.activa">
+                  <span class="status-dot"></span>
+                  {{ comision.activa ? 'Activa' : 'Inactiva' }}
+                </span>
+              </div>
+              <span class="programa-badge">{{ comision.programaNombre }}</span>
+            </div>
+
+            <div class="card-body">
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="info-icon">📅</span>
+                  <div>
+                    <span class="info-label">Días</span>
+                    <span class="info-value">{{ comision.dias }}</span>
+                  </div>
+                </div>
+                <div class="info-item">
+                  <span class="info-icon">🕐</span>
+                  <div>
+                    <span class="info-label">Horario</span>
+                    <span class="info-value">{{ comision.horario }}</span>
+                  </div>
+                </div>
+                <div class="info-item">
+                  <span class="info-icon">📍</span>
+                  <div>
+                    <span class="info-label">Lugar</span>
+                    <span class="info-value">{{ comision.lugar }}</span>
+                  </div>
+                </div>
+                <div class="info-item">
+                  <span class="info-icon">🏷️</span>
+                  <div>
+                    <span class="info-label">Turno</span>
+                    <span class="info-value">{{ comision.turno }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="cupos-section">
+                <div class="cupos-header">
+                  <span class="cupos-label">Cupos</span>
+                  <span class="cupos-numeros">{{ comision.cuposOcupados }} / {{ comision.cupoTotal }}</span>
+                </div>
+                <div class="cupos-barra">
+                  <div class="cupos-progreso" [class]="getClaseCupo(comision)"
+                    [style.width.%]="getPorcentajeCupo(comision)"></div>
+                </div>
+                <span class="cupos-disponibles" [class.agotado]="(comision.cuposDisponibles ?? 0) === 0">
+                  {{ comision.cuposDisponibles ?? (comision.cupoTotal - comision.cuposOcupados) }} disponibles
+                </span>
+              </div>
+            </div>
+
+            <div class="card-actions">
+              <button class="btn-action btn-edit" (click)="editarComision(comision.idComision)">
+                ✏️ Editar
+              </button>
+              <button class="btn-action"
+                [class.btn-deactivate]="comision.activa"
+                [class.btn-activate]="!comision.activa"
+                (click)="confirmarCambioEstado(comision)">
+                {{ comision.activa ? '🔴 Desactivar' : '🟢 Activar' }}
+              </button>
+            </div>
+
+          </div>
+        }
+      </div>
+
+      <div class="results-footer">
+        <p class="results-text">
+          Mostrando <strong>{{ comisionesFiltradas().length }}</strong>
+          {{ comisionesFiltradas().length === 1 ? 'comisión' : 'comisiones' }}
+        </p>
+      </div>
+    }
+  }
+
 </div>
 
-<div class="modal-overlay" *ngIf="mostrarModalConfirmacion" (click)="cerrarModal()">
-  <div class="modal-container" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h3>Confirmar cambio de estado</h3>
-    </div>
-    <div class="modal-body">
-      <p>
-        ¿Estás seguro de que querés
-        <strong>{{ comisionParaCambiar?.activa ? 'desactivar' : 'activar' }}</strong>
-        la comisión <strong>{{ comisionParaCambiar?.codigoComision }}</strong>?
-      </p>
-      <div class="modal-warning" *ngIf="comisionParaCambiar?.activa">
-        <i class="fas fa-info-circle"></i>
-        <span>Las comisiones inactivas no aparecen en el formulario público de inscripción.</span>
+@if (comisionParaCambiar) {
+  <div class="modal-overlay" (click)="cerrarModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          {{ comisionParaCambiar.activa ? '⚠️ Desactivar Comisión' : '✅ Activar Comisión' }}
+        </h3>
+        <button class="modal-close" (click)="cerrarModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-message">
+          ¿Confirmás que querés <strong>{{ comisionParaCambiar.activa ? 'desactivar' : 'activar' }}</strong>
+          la comisión <strong>{{ comisionParaCambiar.codigoComision }}</strong>?
+        </p>
+        @if (comisionParaCambiar.activa) {
+          <div class="modal-info">
+            <span class="info-icon">⚠️</span>
+            <p class="info-text">Las comisiones inactivas no aparecen en el formulario público.</p>
+          </div>
+        }
+      </div>
+      <div class="modal-actions">
+        <button class="btn-modal btn-cancel" (click)="cerrarModal()">Cancelar</button>
+        <button class="btn-modal btn-confirm"
+          [class.btn-confirm-danger]="comisionParaCambiar.activa"
+          [class.btn-confirm-success]="!comisionParaCambiar.activa"
+          (click)="ejecutarCambioEstado()">
+          {{ comisionParaCambiar.activa ? 'Desactivar' : 'Activar' }}
+        </button>
       </div>
     </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" (click)="cerrarModal()">
-        Cancelar
-      </button>
-      <button class="btn-confirm" (click)="ejecutarCambioEstado()">
-        Confirmar
-      </button>
-    </div>
   </div>
-</div>
+}

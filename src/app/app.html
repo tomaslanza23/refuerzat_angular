@@ -1,10 +1,11 @@
-<app-header></app-header>
+@if (mostrarShellPublico()) {
+  <app-header />
+}
 
-<main class="flex-shrink-0">
-
-  <router-outlet>
-  </router-outlet>
-
+<main>
+  <router-outlet />
 </main>
 
-<app-footer></app-footer>
+@if (mostrarShellPublico()) {
+  <app-footer />
+}
